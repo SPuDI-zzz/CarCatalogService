@@ -1,5 +1,6 @@
 # CarCatalogService
 
+Add postgres to Docker if you don't have one
 ```powershell
 docker pull postgres
 ```
