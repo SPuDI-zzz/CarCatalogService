@@ -15,6 +15,6 @@ public class AddCarModelProfile : Profile
 {
     public AddCarModelProfile()
     {
-        CreateMap<Car, AddCarModel>();
+        CreateMap<AddCarModel, Car>();
     }
 }
