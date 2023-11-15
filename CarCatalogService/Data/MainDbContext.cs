@@ -5,22 +5,13 @@ namespace CarCatalogService.Data;
 
 public class MainDbContext : DbContext
 {
-    private readonly IConfiguration _config;
     public DbSet<Car> Cars { get; set; }
     public DbSet<Role> Roles { get; set; }
     public DbSet<User> Users { get; set; }
 
-    public MainDbContext(DbContextOptions options, IConfiguration config) : base(options)
-    {
-        _config = config;
-    }
+    public MainDbContext(DbContextOptions options) : base(options) {}
 
 
-    /*protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        var options = optionsBuilder.UseNpgsql(Environment.GetEnvironmentVariable(_config.GetConnectionString("DefaultConnection")!));
-        base.OnConfiguring(options);
-    }*/
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
