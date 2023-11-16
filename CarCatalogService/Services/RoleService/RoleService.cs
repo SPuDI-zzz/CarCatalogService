@@ -34,7 +34,7 @@ public class RoleService : IRoleService
     {
         using var context = await _contextFactory.CreateDbContextAsync();
 
-        var role = await context.Roles.FirstOrDefaultAsync(id => id.Equals(roleId))
+        var role = await context.Roles.FirstOrDefaultAsync(role => role.Id.Equals(roleId))
             ?? throw new Exception($"The role (id: {roleId}) was not found");
     }
 
@@ -52,7 +52,7 @@ public class RoleService : IRoleService
     {
         using var context = await _contextFactory.CreateDbContextAsync();
 
-        var role = await context.Roles.FirstOrDefaultAsync(id => id.Equals(roleId));
+        var role = await context.Roles.FirstOrDefaultAsync(role => role.Id.Equals(roleId));
 
         var data = _mapper.Map<RoleModel>(role);
         return data;
@@ -62,7 +62,7 @@ public class RoleService : IRoleService
     {
         using var context = await _contextFactory.CreateDbContextAsync();
 
-        var role = await context.Roles.FirstOrDefaultAsync(id => id.Equals(roleId))
+        var role = await context.Roles.FirstOrDefaultAsync(role => role.Id.Equals(roleId))
             ?? throw new Exception($"The role (id: {roleId}) was not found");
 
         role = _mapper.Map(model, role);

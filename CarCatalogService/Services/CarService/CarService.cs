@@ -34,7 +34,7 @@ public class CarService : ICarService
     {
         using var context = await _contextFactory.CreateDbContextAsync();
 
-        var car = await context.Cars.FirstOrDefaultAsync(id => id.Equals(carId))
+        var car = await context.Cars.FirstOrDefaultAsync(car => car.Id.Equals(carId))
             ?? throw new Exception($"The car (id: {carId}) was not found");
 
         context.Remove(car);
@@ -45,7 +45,7 @@ public class CarService : ICarService
     {
         using var context = await _contextFactory.CreateDbContextAsync();
 
-        var car = await context.Cars.FirstOrDefaultAsync(id => id.Equals(carId));
+        var car = await context.Cars.FirstOrDefaultAsync(car => car.Id.Equals(carId));
 
         var data = _mapper.Map<CarModel>(car);
         return data;
@@ -65,7 +65,7 @@ public class CarService : ICarService
     {
         using var context = await _contextFactory.CreateDbContextAsync();
 
-        var car = await context.Cars.FirstOrDefaultAsync(id => id.Equals(carId))
+        var car = await context.Cars.FirstOrDefaultAsync(car => car.Id.Equals(carId))
             ?? throw new Exception($"The car (id: {carId}) was not found");
 
         car = _mapper.Map(model, car);

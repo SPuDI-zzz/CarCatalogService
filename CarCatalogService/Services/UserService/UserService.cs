@@ -34,7 +34,7 @@ public class UserService : IUserSevice
     {
         using var context = await _contextFactory.CreateDbContextAsync();
 
-        var user = await context.Users.FirstOrDefaultAsync(id => id.Equals(userId))
+        var user = await context.Users.FirstOrDefaultAsync(user => user.Id.Equals(userId))
             ?? throw new Exception($"The user (id: {userId}) was not found");
 
         context.Remove(user);
@@ -45,7 +45,7 @@ public class UserService : IUserSevice
     {
         using var context = await _contextFactory.CreateDbContextAsync();
 
-        var user = await context.Users.Include(role => role.Role).FirstOrDefaultAsync(id => id.Equals(userId));
+        var user = await context.Users.Include(role => role.Role).FirstOrDefaultAsync(user => user.Id.Equals(userId));
 
         var data = _mapper.Map<UserModel>(user);
         return data;
@@ -65,7 +65,7 @@ public class UserService : IUserSevice
     {
         using var context = await _contextFactory.CreateDbContextAsync();
 
-        var user = await context.Users.FirstOrDefaultAsync(id => id.Equals(userId))
+        var user = await context.Users.FirstOrDefaultAsync(user => user.Id.Equals(userId))
             ?? throw new Exception($"The user (id: {userId}) was not found");
 
         user = _mapper.Map(model, user);
