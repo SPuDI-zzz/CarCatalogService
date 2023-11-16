@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
 using CarCatalogService.Data;
 using CarCatalogService.Data.Entities;
-using CarCatalogService.Services.CarSercice.Models;
+using CarCatalogService.Services.CarService.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace CarCatalogService.Services.CarSercice;
+namespace CarCatalogService.Services.CarService;
 
 public class CarService : ICarService
 {
@@ -38,7 +38,7 @@ public class CarService : ICarService
             ?? throw new Exception($"The car (id: {carId}) was not found");
 
         context.Remove(car);
-        context.SaveChanges();
+        await context.SaveChangesAsync();
     }
 
     public async Task<CarModel> GetCar(long carId)
@@ -51,7 +51,7 @@ public class CarService : ICarService
         return data;
     }
 
-    public async Task<IEnumerable<CarModel>> GetCars()
+    public async Task<IEnumerable<CarModel>> GetAllCars()
     {
         using var context = await _contextFactory.CreateDbContextAsync();
 
@@ -71,7 +71,7 @@ public class CarService : ICarService
         car = _mapper.Map(model, car);
 
         context.Cars.Update(car);
-        context.SaveChanges();
+        await context.SaveChangesAsync();
 
         var data = _mapper.Map<CarModel>(car);
         return data;

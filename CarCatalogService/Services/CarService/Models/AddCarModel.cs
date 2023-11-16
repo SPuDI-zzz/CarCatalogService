@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using CarCatalogService.Data.Entities;
 
-namespace CarCatalogService.Services.CarSercice.Models;
+namespace CarCatalogService.Services.CarService.Models;
 
 public class AddCarModel
 {
@@ -15,6 +15,7 @@ public class AddCarModelProfile : Profile
 {
     public AddCarModelProfile()
     {
-        CreateMap<AddCarModel, Car>();
+        CreateMap<AddCarModel, Car>()
+            .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.UserId == 0 ? 1 : src.UserId));
     }
 }
