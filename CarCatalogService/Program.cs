@@ -1,5 +1,7 @@
 using CarCatalogService.Data;
-using CarCatalogService.Services.CarSercice;
+using CarCatalogService.Services.CarService;
+using CarCatalogService.Services.RoleService;
+using CarCatalogService.Services.UserService;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,7 +15,9 @@ services.AddDbContextFactory<MainDbContext>(options =>
 });
 
 services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-services.AddSingleton<ICarService, CarService>();
+services.AddScoped<ICarService, CarService>();
+services.AddScoped<IRoleService, RoleService>();
+services.AddScoped<IUserSevice, UserService>();
 
 services.AddControllersWithViews();
 
@@ -23,7 +27,7 @@ app.UseRouting();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Cars}/{action=Index}/{id?}");
+    pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.UseStaticFiles();
 
