@@ -1,0 +1,29 @@
+﻿@model CarModel
+@{
+}
+
+<h1>Are you sure you want to delete this car?</h1>
+
+<form method="post" asp-action="Delete">
+    <div class="mb-3">
+        <label asp-for="Mark">Mark</label>
+        <input asp-for="Mark" class="form-control" placeholder="Mark" disabled>
+        <span asp-validation-for="Mark" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Model">Model</label>
+        <input asp-for="Model" class="form-control" placeholder="Model" disabled>
+        <span asp-validation-for="Model" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Color">Color</label>
+        <input asp-for="Color" class="form-control" placeholder="Color" disabled>
+        <span asp-validation-for="Color" class="text-danger"></span>
+    </div>
+</form>
+<div class="mb-3">
+    <form method="post" asp-action="Delete">
+        <input type="hidden" asp-for="Id" />
+        <button type="submit" class="btn btn-danger">Confirm</button>
+    </form>
+</div>
