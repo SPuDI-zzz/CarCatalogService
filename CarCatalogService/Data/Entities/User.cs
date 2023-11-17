@@ -1,16 +1,11 @@
 ﻿using CarCatalogService.Data.Entities.Common;
+using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
 
 namespace CarCatalogService.Data.Entities
 {
-    public class User : BaseEntity
+    public class User : IdentityUser<long>
     {
-        [MinLength(4)]
-        public required string Login { get; set; }
-        [MinLength(8)]
-        public required string Password { get; set; }
-        public long RoleId { get; set; }
-        public required Role Role { get; set; }
-        public required ICollection<Car> Cars { get; set; }
+        public virtual required ICollection<Car> Cars { get; set; }
     }
 }

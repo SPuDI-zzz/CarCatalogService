@@ -1,31 +1,28 @@
 ﻿using CarCatalogService.Data.Entities;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace CarCatalogService.Data;
 
-public class MainDbContext : DbContext
+public class MainDbContext : IdentityDbContext<User, UserRole, long>
 {
     public DbSet<Car> Cars { get; set; }
-    public DbSet<Role> Roles { get; set; }
-    public DbSet<User> Users { get; set; }
 
-    public MainDbContext(DbContextOptions options) : base(options) {}
+    public MainDbContext(DbContextOptions<MainDbContext> options) : base(options) {}
 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
 
-        modelBuilder.Entity<Role>().ToTable("roles");
-        modelBuilder.Entity<Role>().Property(val => val.Name).IsRequired();
-        modelBuilder.Entity<Role>().Property(val => val.Name).HasMaxLength(100);
-
         modelBuilder.Entity<User>().ToTable("users");
-        modelBuilder.Entity<User>().Property(val => val.Login).IsRequired();
-        modelBuilder.Entity<User>().Property(val => val.Login).HasMaxLength(50);
-        modelBuilder.Entity<User>().Property(val => val.Password).IsRequired();
-        modelBuilder.Entity<User>().Property(val => val.Password).HasMaxLength(50);
-        modelBuilder.Entity<User>().HasOne(val => val.Role).WithMany(val => val.Users).HasForeignKey(val => val.RoleId);
+        modelBuilder.Entity<UserRole>().ToTable("user_roles");
+        modelBuilder.Entity<IdentityUserToken<long>>().ToTable("user_tokens");
+        modelBuilder.Entity<IdentityUserRole<long>>().ToTable("user_role_owners");
+        modelBuilder.Entity<IdentityRoleClaim<long>>().ToTable("user_role_claims");
+        modelBuilder.Entity<IdentityUserLogin<long>>().ToTable("user_logins");
+        modelBuilder.Entity<IdentityUserClaim<long>>().ToTable("user_claims");
 
         modelBuilder.Entity<Car>().ToTable("cars");
         modelBuilder.Entity<Car>().Property(val => val.Mark).IsRequired();
