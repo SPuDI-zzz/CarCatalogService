@@ -12,6 +12,6 @@ public class AddRoleModelProfile : Profile
 {
     public AddRoleModelProfile()
     {
-        CreateMap<AddRoleModel, Role>();
+        CreateMap<AddRoleModel, UserRole>();
     }
 }

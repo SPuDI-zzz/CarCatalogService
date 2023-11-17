@@ -12,6 +12,6 @@ public class UpdateRoleModelProfile : Profile
 {
     public UpdateRoleModelProfile()
     {
-        CreateMap<UpdateRoleModel, Role>();
+        CreateMap<UpdateRoleModel, UserRole>();
     }
 }

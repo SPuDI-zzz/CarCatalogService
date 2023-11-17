@@ -21,7 +21,7 @@ public class RoleService : IRoleService
     {
         using var context = await _contextFactory.CreateDbContextAsync();
 
-        var role = _mapper.Map<Role>(model);
+        var role = _mapper.Map<UserRole>(model);
 
         await context.Roles.AddAsync(role);
         await context.SaveChangesAsync();

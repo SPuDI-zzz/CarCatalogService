@@ -13,6 +13,6 @@ public class RoleModelProfile : Profile
 {
     public RoleModelProfile()
     {
-        CreateMap<Role, RoleModel>();
+        CreateMap<UserRole, RoleModel>();
     }
 }

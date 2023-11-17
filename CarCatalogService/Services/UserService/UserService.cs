@@ -45,7 +45,7 @@ public class UserService : IUserSevice
     {
         using var context = await _contextFactory.CreateDbContextAsync();
 
-        var user = await context.Users.Include(role => role.Role).FirstOrDefaultAsync(user => user.Id.Equals(userId));
+        var user = await context.Users.FirstOrDefaultAsync(user => user.Id.Equals(userId));
 
         var data = _mapper.Map<UserModel>(user);
         return data;
@@ -55,7 +55,7 @@ public class UserService : IUserSevice
     {
         using var context = await _contextFactory.CreateDbContextAsync();
 
-        var data = (await context.Users.Include(role => role.Role).ToListAsync())
+        var data = (await context.Users.ToListAsync())
             .Select(_mapper.Map<UserModel>);
 
         return data;
