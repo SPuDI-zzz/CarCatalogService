@@ -63,4 +63,25 @@ public class CarsController : Controller
 
         return RedirectToAction(nameof(Index));
     }
+
+    public async Task<IActionResult> Delete(long id)
+    {
+        var carModel = await _carService.GetCar(id);
+        if (carModel == null)
+            return View("Error");
+
+        return View(carModel);
+    }
+
+    [HttpPost, ActionName(nameof(Delete))]
+    public async Task<IActionResult> DeleteCar(long id)
+    {
+        var carModel = await _carService.GetCar(id);
+        if (carModel == null)
+            return View("Error");
+
+        await _carService.DeleteCar(id);
+
+        return RedirectToAction(nameof(Index));
+    }
 }
