@@ -1,8 +1,11 @@
 ﻿using AutoMapper;
 using CarCatalogService.Services.CarService;
 using CarCatalogService.Services.CarService.Models;
+using CarCatalogService.Shared;
 using CarCatalogService.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 
 namespace CarCatalogService.Controllers;
 
@@ -16,17 +19,21 @@ public class CarsController : Controller
         _mapper = mapper;
     }
 
+    [Authorize(Policy = AppRoles.User)]
+    [HttpGet]
     public async Task<IActionResult> Index()
     {
         var response = await _carService.GetAllCars();
         return View(response);
     }
 
+    [Authorize(Policy = AppRoles.Manager)]
     public IActionResult Create()
     {
         return View();
     }
 
+    [Authorize(Policy = AppRoles.Manager)]
     [HttpPost]
     public async Task<IActionResult> Create(AddCarModel carModel)
     {
@@ -38,6 +45,7 @@ public class CarsController : Controller
         return RedirectToAction(nameof(Index));
     }
 
+    [Authorize(Policy = AppRoles.Manager)]
     public async Task<IActionResult> Edit(long id)
     {
         var car = await _carService.GetCar(id);
@@ -48,6 +56,7 @@ public class CarsController : Controller
         return View(carViewModel);
     }
 
+    [Authorize(Policy = AppRoles.Manager)]
     [HttpPost]
     public async Task<IActionResult> Edit(long id, EditCarViewModel carViewModel)
     {
@@ -64,6 +73,7 @@ public class CarsController : Controller
         return RedirectToAction(nameof(Index));
     }
 
+    [Authorize(Policy = AppRoles.Manager)]
     public async Task<IActionResult> Delete(long id)
     {
         var carModel = await _carService.GetCar(id);
@@ -73,6 +83,7 @@ public class CarsController : Controller
         return View(carModel);
     }
 
+    [Authorize(Policy = AppRoles.Manager)]
     [HttpPost, ActionName(nameof(Delete))]
     public async Task<IActionResult> DeleteCar(long id)
     {

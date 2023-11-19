@@ -7,7 +7,7 @@ public class RegisterUserAccountModel
 {
     public required string UserName { get; set; }
     public required string Password { get; set; }
-    public required IEnumerable<string> Roles { get; set; }
+    public required string Role { get; set; }
 }
 
 public class RegisterUserAccountModelProfile : Profile
