@@ -42,7 +42,7 @@ public class AccountService : IAccountService
         var resultCreateUser = await _userManager.CreateAsync(user, model.Password);
 
         if (!resultCreateUser.Succeeded)
-            throw new Exception($"Creating user account is wrong. " +
+            throw new Exception($"Creating user account is wrong" +
                 $"{String.Join(", ", resultCreateUser.Errors.Select(s => s.Description))}");
 
         if (!await _roleManager.RoleExistsAsync(model.Role))
@@ -53,7 +53,7 @@ public class AccountService : IAccountService
         var resultAddRoles = await _userManager.AddToRoleAsync(user, model.Role);
         
         if (!resultAddRoles.Succeeded)
-            throw new Exception($"Creating user account is wrong. " +
+            throw new Exception($"Creating user account is wrong" +
                 $"{String.Join(", ", resultAddRoles.Errors.Select(s => s.Description))}");
 
         var data = _mapper.Map<UserAccountModel>(user);

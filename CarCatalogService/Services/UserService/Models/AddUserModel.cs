@@ -8,13 +8,14 @@ public class AddUserModel
 {
     public required string Login { get; set; }
     public required string Password { get; set; }
-    public long RoleId { get; set; }
+    public required string Role { get; set; }
 }
 
 public class AddUserModelProfile : Profile
 {
     public AddUserModelProfile()
     {
-        CreateMap<AddUserModel, User>();
+        CreateMap<AddUserModel, User>()
+            .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.Login));
     }
 }

@@ -13,6 +13,7 @@ public class CarsController : Controller
 {
     private readonly ICarService _carService;
     private readonly IMapper _mapper;
+
     public CarsController(ICarService carService, IMapper mapper)
     {
         _carService = carService;
@@ -28,6 +29,7 @@ public class CarsController : Controller
     }
 
     [Authorize(Policy = AppRoles.Manager)]
+    [HttpGet]
     public IActionResult Create()
     {
         return View();
@@ -35,17 +37,21 @@ public class CarsController : Controller
 
     [Authorize(Policy = AppRoles.Manager)]
     [HttpPost]
-    public async Task<IActionResult> Create(AddCarModel carModel)
+    public async Task<IActionResult> Create(AddCarViewModel carViewModel)
     {
         if (!ModelState.IsValid)
         {
-            return View(carModel);
+            return View(carViewModel);
         }
+
+        var carModel = _mapper.Map<AddCarModel>(carViewModel);
+
         await _carService.AddCar(carModel);
         return RedirectToAction(nameof(Index));
     }
 
     [Authorize(Policy = AppRoles.Manager)]
+    [HttpGet]
     public async Task<IActionResult> Edit(long id)
     {
         var car = await _carService.GetCar(id);
@@ -74,6 +80,7 @@ public class CarsController : Controller
     }
 
     [Authorize(Policy = AppRoles.Manager)]
+    [HttpGet]
     public async Task<IActionResult> Delete(long id)
     {
         var carModel = await _carService.GetCar(id);

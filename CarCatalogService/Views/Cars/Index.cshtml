@@ -16,7 +16,10 @@
                         <th scope="col">Mark</th>
                         <th scope="col">Model</th>
                         <th scope="col">Color</th>
-                        <th scope="col"><a asp-controller="Cars" asp-action="Create" type="button" class="btn btn-primary"><i class="bi bi-plus-square"></i></a></th>
+                        @if (!User.IsInRole(AppRoles.User))
+                        {
+                            <th scope="col"><a asp-controller="Cars" asp-action="Create" type="button" class="btn btn-primary"><i class="bi bi-plus-square"></i></a></th>
+                        }
                     </tr>
                 </thead>
                 <tbody>
@@ -27,10 +30,13 @@
                             <td>@car.Mark</td>
                             <td>@car.Model</td>
                             <td>@car.Color</td>
-                            <td>
-                                <a asp-controller="Cars" asp-action="Edit" asp-route-id="@car.Id" type="button" class="btn btn-success"><i class="bi bi-pencil-square"></i></a>
-                                <a asp-controller="Cars" asp-action="Delete" asp-route-id="@car.Id" type="button" class="btn btn-danger"><i class="bi bi-trash3"></i></a>
-                            </td>
+                            @if (!User.IsInRole(AppRoles.User))
+                            {
+                                <td>
+                                    <a asp-controller="Cars" asp-action="Edit" asp-route-id="@car.Id" type="button" class="btn btn-success"><i class="bi bi-pencil-square"></i></a>
+                                    <a asp-controller="Cars" asp-action="Delete" asp-route-id="@car.Id" type="button" class="btn btn-danger"><i class="bi bi-trash3"></i></a>
+                                </td>
+                            }
                         </tr>
                     }
                 </tbody>

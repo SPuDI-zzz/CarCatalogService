@@ -1,0 +1,24 @@
+﻿@model UserModel
+@{
+}
+
+<h1>Are you sure you want to delete this user?</h1>
+
+<form method="post" asp-action="Delete">
+    <div class="mb-3">
+        <label asp-for="Login">Login</label>
+        <input asp-for="Login" class="form-control" placeholder="Login" disabled>
+        <span asp-validation-for="Login" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Role">Model</label>
+        <input asp-for="Role" class="form-control" placeholder="Role" disabled>
+        <span asp-validation-for="Role" class="text-danger"></span>
+    </div>
+</form>
+<div class="mb-3">
+    <form method="post" asp-action="Delete">
+        <input type="hidden" asp-for="Id" />
+        <button type="submit" class="btn btn-danger">Confirm</button>
+    </form>
+</div>

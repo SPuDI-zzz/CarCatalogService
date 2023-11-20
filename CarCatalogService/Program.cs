@@ -115,5 +115,6 @@ app.UseAuthorization();
 app.MapControllers();
 
 DbInitializer.Execute(app.Services);
+DbSeeder.Execute(app.Services, true, true);
 
 app.Run();

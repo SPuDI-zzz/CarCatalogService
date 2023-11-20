@@ -17,27 +17,6 @@ public class RoleService : IRoleService
         _mapper = mapper;
     }
 
-    public async Task<RoleModel> AddRole(AddRoleModel model)
-    {
-        using var context = await _contextFactory.CreateDbContextAsync();
-
-        var role = _mapper.Map<UserRole>(model);
-
-        await context.Roles.AddAsync(role);
-        await context.SaveChangesAsync();
-
-        var data = _mapper.Map<RoleModel>(role);
-        return data;
-    }
-
-    public async Task Delete(long roleId)
-    {
-        using var context = await _contextFactory.CreateDbContextAsync();
-
-        var role = await context.Roles.FirstOrDefaultAsync(role => role.Id.Equals(roleId))
-            ?? throw new Exception($"The role (id: {roleId}) was not found");
-    }
-
     public async Task<IEnumerable<RoleModel>> GetAllRoles()
     {
         using var context = await _contextFactory.CreateDbContextAsync();
@@ -45,32 +24,6 @@ public class RoleService : IRoleService
         var data = (await context.Roles.ToListAsync())
             .Select(_mapper.Map<RoleModel>);
 
-        return data;
-    }
-
-    public async Task<RoleModel> GetRole(long roleId)
-    {
-        using var context = await _contextFactory.CreateDbContextAsync();
-
-        var role = await context.Roles.FirstOrDefaultAsync(role => role.Id.Equals(roleId));
-
-        var data = _mapper.Map<RoleModel>(role);
-        return data;
-    }
-
-    public async Task<RoleModel> UpdateRole(long roleId, UpdateRoleModel model)
-    {
-        using var context = await _contextFactory.CreateDbContextAsync();
-
-        var role = await context.Roles.FirstOrDefaultAsync(role => role.Id.Equals(roleId))
-            ?? throw new Exception($"The role (id: {roleId}) was not found");
-
-        role = _mapper.Map(model, role);
-
-        context.Roles.Update(role);
-        await context.SaveChangesAsync();
-
-        var data = _mapper.Map<RoleModel>(role);
         return data;
     }
 }

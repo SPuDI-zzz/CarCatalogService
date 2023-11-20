@@ -1,46 +1,102 @@
-﻿using CarCatalogService.Services.RoleService;
+﻿using AutoMapper;
+using CarCatalogService.Services.RoleService;
 using CarCatalogService.Services.UserService;
 using CarCatalogService.Services.UserService.Models;
+using CarCatalogService.Shared;
+using CarCatalogService.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
-namespace CarCatalogService.Controllers
+namespace CarCatalogService.Controllers;
+
+[Authorize(Policy = AppRoles.Admin)]
+public class UsersController : Controller
 {
-    public class UsersController : Controller
+    private readonly IUserSevice _userService;
+    private readonly IRoleService _roleService;
+    private readonly IMapper _mapper;
+
+    public UsersController(IUserSevice userService, IRoleService roleService, IMapper mapper)
     {
-        private protected IUserSevice _userService;
-        private readonly IRoleService _roleService;
+        _userService = userService;
+        _roleService = roleService;
+        _mapper = mapper;
+    }
 
-        public UsersController(IUserSevice userService, IRoleService roleService)
+    [HttpGet]
+    public async Task<IActionResult> Index()
+    {            
+        var response = await _userService.GetAllUsers();
+        return View(response);
+    }
+
+    [HttpGet]
+    public IActionResult Create()
+    {
+        return View();
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Create(AddUserViewModel userViewModel)
+    {
+        if (!ModelState.IsValid)
         {
-            _userService = userService;
-            _roleService = roleService;
+            return View(userViewModel);
         }
 
-        public async Task<IActionResult> Index()
-        {            
-            var response = await _userService.GetAllUsers();
-            return View(response);
-        }
+        var userModel = _mapper.Map<AddUserModel>(userViewModel);
 
-        public async Task<IActionResult> Create()
+        await _userService.AddUser(userModel);
+        return RedirectToAction(nameof(Index));
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> Edit(long id)
+    {
+        var user = await _userService.GetUser(id);
+        if (user == null)
+            return View("Error");
+
+        var userViewModel = _mapper.Map<EditUserViewModel>(user);
+        return View(userViewModel);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Edit(long id, EditUserViewModel userViewModel)
+    {
+        if (!ModelState.IsValid)
         {
-            var roles = await _roleService.GetAllRoles();
-            ViewBag.Roles = new SelectList(roles, "Id", "Name");
-            return View();
+            ModelState.AddModelError("", "Failed to edit car");
+            return View(nameof(Edit), userViewModel);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Create(AddUserModel userModel)
-        {
-            if (!ModelState.IsValid)
-            {
-                var roles = await _roleService.GetAllRoles();
-                ViewBag.Roles = new SelectList(roles, "Id", "Name");
-                return View(userModel);
-            }
-            await _userService.AddUser(userModel);
-            return RedirectToAction(nameof(Index));
-        }
+        var userModel = _mapper.Map<UpdateUserModel>(userViewModel);
+
+        await _userService.UpdateUser(id, userModel);
+
+        return RedirectToAction(nameof(Index));
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> Delete(long id)
+    {
+        var userModel = await _userService.GetUser(id);
+        if (userModel == null)
+            return View("Error");
+
+        return View(userModel);
+    }
+
+    [HttpPost, ActionName(nameof(Delete))]
+    public async Task<IActionResult> DeleteUser(long id)
+    {
+        var userModel = await _userService.GetUser(id);
+        if (userModel == null)
+            return View("Error");
+
+        await _userService.DeleteUser(id);
+
+        return RedirectToAction(nameof(Index));
     }
 }
