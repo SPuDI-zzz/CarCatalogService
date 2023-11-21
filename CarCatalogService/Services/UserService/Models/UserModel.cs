@@ -14,9 +14,9 @@ public class UserModelProfile : Profile
 {
     public UserModelProfile()
     {
-        CreateMap<User, UserModel>()
-            .ForMember(dest => dest.Login, opt => opt.MapFrom(src => src.UserName));
-        CreateMap<UserRole, UserModel>()
-            .ForMember(dest => dest.Role, opt => opt.MapFrom(src => src.Name));
+        CreateMap<UserRoleOwners, UserModel>()
+            .ForMember(dest => dest.Login, opt => opt.MapFrom(src => src.User.UserName))
+            .ForMember(dest => dest.Role, opt => opt.MapFrom(src => src.Role.Name))
+            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.UserId));
     }
 }

@@ -50,28 +50,40 @@ public class UserService : IUserSevice
 
     public async Task<UserModel> GetUser(long userId)
     {
-        var user = await _userManager.Users.FirstOrDefaultAsync(user => user.Id.Equals(userId));
-        var roles = await _userManager.GetRolesAsync(user!);
-        
-        var data = _mapper.Map<UserModel>(user);
-        data.Role = roles.First();
+        using var context = await _contextFactory.CreateDbContextAsync();
 
+        var userWithRole = await context.UserRoles
+            .Include(val => val.User)
+            .Include(val => val.Role)
+            .Where(val => val.UserId == userId)
+            .FirstOrDefaultAsync();
+
+        var data = _mapper.Map<UserModel>(userWithRole);
         return data;
     }
 
     public async Task<IEnumerable<UserModel>> GetAllUsers()
     {
+        using var context = await _contextFactory.CreateDbContextAsync();
 
-        var data = (await _userManager.Users.ToListAsync())
-            .Select(async user =>
+        var a = await context.Users
+            .Include(val => val.UserRoles)
+                .ThenInclude(val => val.Role)
+            .Select(val => new TempUserModel
             {
-                var roles = await _userManager.GetRolesAsync(user);
-                var data = _mapper.Map<UserModel>(user);
-                data.Role = roles.First();
+                Id = val.Id,
+                Login = val.UserName!,
+                Roles = val.UserRoles!.Select(val => val.Role.Name)!
+            }).ToListAsync();
 
-                return data;
-            }).Select(t => t.Result);
-        return data;
+        var usersWithRoles = context.UserRoles
+            .Include(val => val.User)
+            .Include(val => val.Role)
+            .Select(_mapper.Map<UserModel>)//val => new UserModel { Id = val.UserId, Login = val.User.UserName, Role = val.Role.Name })
+            .ToList();
+
+        //var data = usersWithRoles.Select(_mapper.Map<UserModel>);
+        return usersWithRoles;
     }
 
     public async Task<UserModel> UpdateUser(long userId, UpdateUserModel model)
