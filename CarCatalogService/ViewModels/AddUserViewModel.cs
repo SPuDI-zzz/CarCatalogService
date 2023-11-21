@@ -8,7 +8,7 @@ public class AddUserViewModel
 {
     public required string Login { get; set; }
     public required string Password {  get; set; }
-    public required RolesEnum Role { get; set; }
+    public required IEnumerable<RolesEnum> Roles { get; set; }
 }
 
 public class AddUserViewModelProfile : Profile
@@ -16,6 +16,6 @@ public class AddUserViewModelProfile : Profile
     public AddUserViewModelProfile()
     {
         CreateMap<AddUserViewModel, AddUserModel>()
-            .ForMember(dest => dest.Role, opt => opt.MapFrom(src => src.Role.ToString()));
+            .ForMember(dest => dest.Roles, opt => opt.MapFrom(src => src.Roles.Select(val => val.ToString())));
     }
 }

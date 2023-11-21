@@ -7,7 +7,7 @@ public class UpdateUserModel
 {
     public required string Login { get; set; }
 
-    public required string Role { get; set; }
+    public required IEnumerable<string> Roles { get; set; }
 }
 
 public class UpdateUserModelProfile : Profile

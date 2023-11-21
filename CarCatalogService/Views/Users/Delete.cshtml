@@ -11,9 +11,9 @@
         <span asp-validation-for="Login" class="text-danger"></span>
     </div>
     <div class="mb-3">
-        <label asp-for="Role">Model</label>
-        <input asp-for="Role" class="form-control" placeholder="Role" disabled>
-        <span asp-validation-for="Role" class="text-danger"></span>
+        <label asp-for="Roles">Roles</label>
+        <input asp-for="Roles" class="form-control" placeholder="@string.Join(' ', Model.Roles)" disabled>
+        <span asp-validation-for="Roles" class="text-danger"></span>
     </div>
 </form>
 <div class="mb-3">

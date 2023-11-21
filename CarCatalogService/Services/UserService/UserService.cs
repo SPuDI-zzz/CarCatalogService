@@ -22,7 +22,7 @@ public class UserService : IUserSevice
         _contextFactory = contextFactory;
     }
 
-    public async Task<UserModel> AddUser(AddUserModel model)
+    public async Task AddUser(AddUserModel model)
     {
         var user = _mapper.Map<User>(model);
 
@@ -31,13 +31,13 @@ public class UserService : IUserSevice
             throw new Exception($"Creating user account is wrong" +
                 $"{String.Join(", ", resultCreateUser.Errors.Select(s => s.Description))}");
 
-        var role = (await _roleManager.Roles.FirstAsync(role => role.Name!.Equals(model.Role)));
-        await _userManager.AddToRoleAsync(user, model.Role);
+        //var role = await _roleManager.Roles.Where(role => role.Name!.Equals(model.Roles.First())).FirstOrDefaultAsync();
+        await _userManager.AddToRolesAsync(user, model.Roles);
 
-        var data = _mapper.Map<UserModel>(user);
-        data = _mapper.Map(role, data);
+        //var data = _mapper.Map<UserModel>(user);
+        //data = _mapper.Map(role, data);
 
-        return data;
+        //return data;
     }
 
     public async Task DeleteUser(long userId)
@@ -48,46 +48,62 @@ public class UserService : IUserSevice
         await _userManager.DeleteAsync(user);
     }
 
-    public async Task<UserModel> GetUser(long userId)
+    public async Task<UserModel?> GetUser(long userId)
     {
         using var context = await _contextFactory.CreateDbContextAsync();
 
-        var userWithRole = await context.UserRoles
-            .Include(val => val.User)
-            .Include(val => val.Role)
-            .Where(val => val.UserId == userId)
+        var data = await context.Users.Where(val => val.Id.Equals(userId))
+            .Include(val => val.UserRoles)
+                .ThenInclude(val => val.Role)
+            .Select(val => new UserModel
+            {
+                Id = val.Id,
+                Login = val.UserName!,
+                Roles = val.UserRoles!.Select(val => val.Role.Name)!
+            })
             .FirstOrDefaultAsync();
 
-        var data = _mapper.Map<UserModel>(userWithRole);
+        /*var userWithRole = await context.UserRoles
+            .Where(val => val.UserId == userId)
+            .Include(val => val.User)
+            .Include(val => val.Role)
+            .FirstOrDefaultAsync();
+
+        var data = _mapper.Map<UserModel>(userWithRole);*/
         return data;
     }
 
     public async Task<IEnumerable<UserModel>> GetAllUsers()
     {
         using var context = await _contextFactory.CreateDbContextAsync();
-
-        var a = await context.Users
+        
+        var data = await context.Users
             .Include(val => val.UserRoles)
                 .ThenInclude(val => val.Role)
-            .Select(val => new TempUserModel
+            .Select(val => new UserModel
             {
                 Id = val.Id,
                 Login = val.UserName!,
                 Roles = val.UserRoles!.Select(val => val.Role.Name)!
             }).ToListAsync();
 
-        var usersWithRoles = context.UserRoles
+        /*var usersWithRoles = context.UserRoles
             .Include(val => val.User)
             .Include(val => val.Role)
             .Select(_mapper.Map<UserModel>)//val => new UserModel { Id = val.UserId, Login = val.User.UserName, Role = val.Role.Name })
-            .ToList();
+            .ToList();*/
 
         //var data = usersWithRoles.Select(_mapper.Map<UserModel>);
-        return usersWithRoles;
+        return data;
     }
 
+    // TODO : write with dbcontext
     public async Task<UserModel> UpdateUser(long userId, UpdateUserModel model)
     {
+        using var context = await _contextFactory.CreateDbContextAsync();
+
+        /*var a = context.UserRoles.*/
+
         var user = await _userManager.Users.FirstOrDefaultAsync(user => user.Id.Equals(userId))
             ?? throw new Exception($"The user (id: {userId}) was not found");
 
@@ -98,13 +114,13 @@ public class UserService : IUserSevice
 
         await _userManager.UpdateAsync(user);
 
-        if (!roles.First().Equals(model.Role))
+        if (!roles.First().Equals(model.Roles))
         {
             await _userManager.RemoveFromRoleAsync(user, roles[0]);
-            await _userManager.AddToRoleAsync(user, model.Role);
+            await _userManager.AddToRolesAsync(user, model.Roles);
         }
 
-        data.Role = model.Role;
+        data.Roles = model.Roles;
         return data;
     }
 }

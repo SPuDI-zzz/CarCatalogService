@@ -8,7 +8,6 @@ namespace CarCatalogService.Data;
 public class MainDbContext : IdentityDbContext<User, UserRole, long, IdentityUserClaim<long>, UserRoleOwners, IdentityUserLogin<long>, IdentityRoleClaim<long>, IdentityUserToken<long>>
 {
     public DbSet<Car> Cars { get; set; }
-    public DbSet<UserRoleOwners> userRoleOwners { get; set; }
 
     public MainDbContext(DbContextOptions<MainDbContext> options) : base(options) {}
 

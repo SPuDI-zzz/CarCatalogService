@@ -20,37 +20,48 @@ public static class DbSeeder
     {
         using var roleManager = RoleManager(serviceProvider);
 
-        if (roleManager.Roles.Any())
-            return;
-
-        var admin = new UserRole
+        if (!roleManager.Roles.Where(role => role.Name!.Equals(AppRoles.User)).Any())
         {
-            Name = "Admin",
-        };
-        await roleManager.CreateAsync(admin);
-        var manager = new UserRole
+            var user = new UserRole
+            {
+                Name = "User",
+            };
+            await roleManager.CreateAsync(user);
+        }
+        if (!roleManager.Roles.Where(role => role.Name!.Equals(AppRoles.Manager)).Any())
         {
-            Name = "Manager",
-        };
-        await roleManager.CreateAsync(manager);
-        var user = new UserRole
+            var manager = new UserRole
+            {
+                Name = "Manager",
+            };
+            await roleManager.CreateAsync(manager);
+        }
+        if (!roleManager.Roles.Where(role => role.Name!.Equals(AppRoles.Admin)).Any())
         {
-            Name = "User",
-        };
-        await roleManager.CreateAsync(user);
+            var admin = new UserRole
+            {
+                Name = "Admin",
+            };
+            await roleManager.CreateAsync(admin);
+        }
     }
 
     private static async Task ConfigureAdministrator(IServiceProvider serviceProvider)
     {
         var userService = UserService(serviceProvider);
-        var isZeroUsers = !(await userService?.GetAllUsers()!)?.Any() ?? false;
-        if (isZeroUsers)
+        //var test = await userService.GetAllUsers();
+        //var userRole = test.Select(user => user.Roles);
+        var isZeroAdminUsers = !(await userService.GetAllUsers())
+            .Where(user => user.Roles
+                .Where(role => role.Equals(AppRoles.Admin)).Any()).Any();
+
+        if (isZeroAdminUsers)
         {
             await userService.AddUser(new()
             {
                 Login = Login,
                 Password = Password,
-                Role = AppRoles.Admin
+                Roles = new[] { AppRoles.Admin }
             });
         }
     }
@@ -77,14 +88,14 @@ public static class DbSeeder
         if (context.Cars.Any() || !context.Users.Any())
             return;
 
-        var admin = await context.Users.FirstAsync(user => user.UserName!.Equals(AppRoles.Admin));
+        var user = await context.Users.FirstAsync();
 
         var car1 = new Car
         {
             Mark = "BMW",
             Model = "X5",
             Color = "Green",
-            UserId = admin.Id,
+            UserId = user.Id,
         };
         await context.Cars.AddAsync(car1);
         var car2 = new Car
@@ -92,7 +103,7 @@ public static class DbSeeder
             Mark = "Lada",
             Model = "Granta",
             Color = "White",
-            UserId = admin.Id,
+            UserId = user.Id,
         };
         await context.Cars.AddAsync(car2);
         await context.SaveChangesAsync();

@@ -11,11 +11,11 @@
         <span asp-validation-for="Login" class="text-danger"></span>
     </div>
     <div class="mb-3">
-        <label asp-for="Role">Role</label>
-        <select asp-for="Role" asp-items="@Html.GetEnumSelectList<RolesEnum>()">
+        <label asp-for="Roles">Roles</label>
+        <select asp-for="Roles" asp-items="@Html.GetEnumSelectList<RolesEnum>()" multiple>
             <option selected="selected" disabled value="">--Select--</option>
         </select>
-        <span asp-validation-for="Role" class="text-danger"></span>
+        <span asp-validation-for="Roles" class="text-danger"></span>
     </div>
     <button type="submit" class="btn btn-primary">Submit</button>
 </form>

@@ -24,7 +24,7 @@
                         <tr>
                             <th scope="row">@(numberCar++)</th>
                             <td>@user.Login</td>
-                            <td>@user.Role</td>
+                            <td>@string.Join(' ',user.Roles)</td>
                             <td>
                                 <a asp-controller="Users" asp-action="Edit" asp-route-id="@user.Id" type="button" class="btn btn-success"><i class="bi bi-pencil-square"></i></a>
                                 <a asp-controller="Users" asp-action="Delete" asp-route-id="@user.Id" type="button" class="btn btn-danger"><i class="bi bi-trash3"></i></a>
