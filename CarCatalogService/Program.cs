@@ -1,6 +1,8 @@
 using CarCatalogService.Data.Entities;
 using CarCatalogService.Data.EntityFramework;
 using CarCatalogService.Data.EntityFramework.Setup;
+using CarCatalogService.Data.Repositories.CarRepository;
+using CarCatalogService.Data.Repositories.Interfaces;
 using CarCatalogService.Services.AccountService;
 using CarCatalogService.Services.CarService;
 using CarCatalogService.Services.UserService;
@@ -79,12 +81,18 @@ services.AddAuthorization(options =>
     .RequireAuthenticatedUser()
     .AddAuthenticationSchemes(IdentityConstants.ApplicationScheme, "jwt")
     .RequireRole(AppRoles.Admin));
+
+    options.AddPolicy("AllowAnonymousPolicy", policy => policy
+    .RequireAuthenticatedUser()
+    .AddAuthenticationSchemes(IdentityConstants.ApplicationScheme, "jwt")
+    .RequireAssertion(context => true));
 });
 
 services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 services.AddScoped<ICarService, CarService>();
 services.AddScoped<IUserSevice, UserService>();
+services.AddScoped<IRepository<Car>, CarRepository>();
 services.AddScoped<IAccountService, AccountService>();
 
 var app = builder.Build();
@@ -93,7 +101,7 @@ app.UseRouting();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Account}/{action=Login}/{id?}");
+    pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.UseStaticFiles();
 

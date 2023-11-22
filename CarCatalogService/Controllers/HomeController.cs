@@ -7,7 +7,8 @@ namespace CarCatalogService.Controllers;
 
 public class HomeController : Controller
 {
-    [Authorize]
+    [AllowAnonymous]
+    [Authorize(Policy = "AllowAnonymousPolicy")]
     public IActionResult Index()
     {
         return View();
