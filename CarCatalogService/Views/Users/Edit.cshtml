@@ -4,6 +4,14 @@
 *@
 @{
 }
+
+@if (TempData["Error"] != null)
+{
+    <div class="col-md-12 alert alert-danger">
+        <span><b>Sorry!</b> - @TempData["Error"] </span>
+    </div>
+}
+
 <form method="post" asp-action="Edit">
     <div class="mb-3">
         <label asp-for="Login">Login</label>
@@ -12,7 +20,7 @@
     </div>
     <div class="mb-3">
         <label asp-for="Roles">Roles</label>
-        <select asp-for="Roles" asp-items="@Html.GetEnumSelectList<RolesEnum>()" multiple>
+        <select asp-for="Roles" asp-items="@Html.GetEnumSelectList<RolesEnum>()">
             <option selected="selected" disabled value="">--Select--</option>
         </select>
         <span asp-validation-for="Roles" class="text-danger"></span>

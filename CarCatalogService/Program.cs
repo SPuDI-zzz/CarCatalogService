@@ -1,9 +1,8 @@
-using CarCatalogService.Data;
 using CarCatalogService.Data.Entities;
-using CarCatalogService.Data.Setup;
+using CarCatalogService.Data.EntityFramework;
+using CarCatalogService.Data.EntityFramework.Setup;
 using CarCatalogService.Services.AccountService;
 using CarCatalogService.Services.CarService;
-using CarCatalogService.Services.RoleService;
 using CarCatalogService.Services.UserService;
 using CarCatalogService.Shared;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -83,35 +82,24 @@ services.AddAuthorization(options =>
 });
 
 services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
 services.AddScoped<ICarService, CarService>();
-services.AddScoped<IRoleService, RoleService>();
 services.AddScoped<IUserSevice, UserService>();
 services.AddScoped<IAccountService, AccountService>();
 
 var app = builder.Build();
 
-//app.UseSession();
-/*app.Use(async (context, next) =>
-{
-    var token = context.Request.Cookies["Token"];
-    if (!string.IsNullOrEmpty(token))
-    {
-        context.Request.Headers.Add("Authorization", "Bearer " + token);
-    }
-    await next();
-});*/
-
 app.UseRouting();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Account}/{action=Login}/{id?}");
 
 app.UseStaticFiles();
 
 app.UseAuthentication();
 app.UseAuthorization();
-//app.UseCookiePolicy();
+
 app.MapControllers();
 
 DbInitializer.Execute(app.Services);

@@ -7,6 +7,6 @@ public interface IUserSevice
     Task<UserModel?> GetUser(long userId);
     Task<IEnumerable<UserModel>> GetAllUsers();
     Task AddUser(AddUserModel model);
-    Task<UserModel> UpdateUser(long userId, UpdateUserModel model);
+    Task UpdateUser(long userId, UpdateUserModel model);
     Task DeleteUser(long userId);
 }

@@ -1,12 +1,10 @@
 ﻿using AutoMapper;
-using CarCatalogService.Services.RoleService;
 using CarCatalogService.Services.UserService;
 using CarCatalogService.Services.UserService.Models;
 using CarCatalogService.Shared;
 using CarCatalogService.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace CarCatalogService.Controllers;
 
@@ -14,13 +12,11 @@ namespace CarCatalogService.Controllers;
 public class UsersController : Controller
 {
     private readonly IUserSevice _userService;
-    private readonly IRoleService _roleService;
     private readonly IMapper _mapper;
 
-    public UsersController(IUserSevice userService, IRoleService roleService, IMapper mapper)
+    public UsersController(IUserSevice userService, IMapper mapper)
     {
         _userService = userService;
-        _roleService = roleService;
         _mapper = mapper;
     }
 
@@ -72,8 +68,15 @@ public class UsersController : Controller
         }
 
         var userModel = _mapper.Map<UpdateUserModel>(userViewModel);
-
-        await _userService.UpdateUser(id, userModel);
+        try
+        {
+            await _userService.UpdateUser(id, userModel);
+        }
+        catch (Exception e)
+        {
+            TempData["Error"] = e.Message;
+            return View(userViewModel);
+        }
 
         return RedirectToAction(nameof(Index));
     }

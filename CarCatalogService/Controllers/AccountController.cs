@@ -12,11 +12,15 @@ public class AccountController : Controller
 {
     private readonly IAccountService _accountService;
     private readonly IMapper _mapper;
+    private readonly SignInManager<User> _signInManager;
+    private readonly UserManager<User> _userManager;
 
-    public AccountController(IAccountService accountService, IMapper mapper)
+    public AccountController(IAccountService accountService, IMapper mapper, SignInManager<User> signInManager, UserManager<User> userManager)
     {
         _accountService = accountService;
         _mapper = mapper;
+        _signInManager = signInManager;
+        _userManager = userManager;
     }
 
     public IActionResult Login()
@@ -24,7 +28,6 @@ public class AccountController : Controller
         return View();
     }
 
-    // TODO
     [HttpPost]
     public async Task<IActionResult> Login(LoginViewModel loginViewModel)
     {
@@ -50,8 +53,7 @@ public class AccountController : Controller
             TempData["Error"] = "Wrong credentials. Please try again.";
             return View(loginViewModel);
         }
-        
-        
+
         return RedirectToAction("Index", "Home");
     }
 
@@ -78,5 +80,12 @@ public class AccountController : Controller
         }
 
         return RedirectToAction(nameof(Login));
+    }
+
+    [HttpGet]
+    public IActionResult Logout()
+    {
+        HttpContext.Response.Cookies.Delete("token");
+        return RedirectToAction("Login", "Account");
     }
 }

@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 
-namespace CarCatalogService.Data.Factories;
+namespace CarCatalogService.Data.EntityFramework.Factories;
 
 public class DesignTimeDbContextFactory : IDesignTimeDbContextFactory<MainDbContext>
 {

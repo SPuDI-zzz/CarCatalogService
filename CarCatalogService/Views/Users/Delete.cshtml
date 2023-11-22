@@ -12,7 +12,7 @@
     </div>
     <div class="mb-3">
         <label asp-for="Roles">Roles</label>
-        <input asp-for="Roles" class="form-control" placeholder="@string.Join(' ', Model.Roles)" disabled>
+        <input asp-for="Roles" class="form-control" disabled value="@string.Join(' ', Model.Roles)">
         <span asp-validation-for="Roles" class="text-danger"></span>
     </div>
 </form>

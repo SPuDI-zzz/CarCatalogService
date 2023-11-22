@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace CarCatalogService.Data;
+namespace CarCatalogService.Data.EntityFramework;
 
 public class MainDbContext : IdentityDbContext<User, UserRole, long, IdentityUserClaim<long>, UserRoleOwners, IdentityUserLogin<long>, IdentityRoleClaim<long>, IdentityUserToken<long>>
 {

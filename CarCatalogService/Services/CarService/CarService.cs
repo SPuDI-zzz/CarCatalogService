@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using CarCatalogService.Data;
 using CarCatalogService.Data.Entities;
+using CarCatalogService.Data.EntityFramework;
 using CarCatalogService.Services.CarService.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,14 +11,14 @@ public class CarService : ICarService
 {
     private readonly IDbContextFactory<MainDbContext> _contextFactory;
     private readonly IMapper _mapper;
-
+    
     public CarService(IDbContextFactory<MainDbContext> contextFactory, IMapper mapper)
     {
         _contextFactory = contextFactory;
         _mapper = mapper;
     }
 
-    public async Task<CarModel> AddCar(AddCarModel model)
+    public async Task AddCar(AddCarModel model)
     {
         using var context = await _contextFactory.CreateDbContextAsync();
 
@@ -25,9 +26,6 @@ public class CarService : ICarService
 
         await context.Cars.AddAsync(car);
         await context.SaveChangesAsync();
-
-        var data = _mapper.Map<CarModel>(car);
-        return data;
     }
 
     public async Task DeleteCar(long carId)
@@ -61,7 +59,7 @@ public class CarService : ICarService
         return data;
     }
 
-    public async Task<CarModel> UpdateCar(long carId, UpdateCarModel model)
+    public async Task UpdateCar(long carId, UpdateCarModel model)
     {
         using var context = await _contextFactory.CreateDbContextAsync();
 
@@ -72,8 +70,5 @@ public class CarService : ICarService
 
         context.Cars.Update(car);
         await context.SaveChangesAsync();
-
-        var data = _mapper.Map<CarModel>(car);
-        return data;
     }
 }

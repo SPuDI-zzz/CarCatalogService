@@ -4,7 +4,7 @@ using CarCatalogService.Shared;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
-namespace CarCatalogService.Data.Setup;
+namespace CarCatalogService.Data.EntityFramework.Setup;
 
 public static class DbSeeder
 {

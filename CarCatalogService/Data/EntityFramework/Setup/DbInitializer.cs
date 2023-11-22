@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace CarCatalogService.Data.Setup;
+namespace CarCatalogService.Data.EntityFramework.Setup;
 
 public static class DbInitializer
 {
