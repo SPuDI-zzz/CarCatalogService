@@ -5,13 +5,23 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CarCatalogService.DAL.EntityFramework;
 
+/// <summary>
+///     Represents the main database context for the application, extending IdentityDbContext for user and role management.
+/// </summary>
 public class MainDbContext : IdentityDbContext<User, UserRole, long, IdentityUserClaim<long>, UserRoleOwners, IdentityUserLogin<long>, IdentityRoleClaim<long>, IdentityUserToken<long>>
 {
+    /// <summary>
+    ///     Gets or sets the DbSet for interacting with the <seealso cref="Car"/> entity in the database.
+    /// </summary>
     public DbSet<Car> Cars { get; set; }
 
+    /// <summary>
+    /// Initializes a new instance of the MainDbContext class with the specified options.
+    /// </summary>
+    /// <param name="options">The options to be used for configuring the context.</param>
     public MainDbContext(DbContextOptions<MainDbContext> options) : base(options) {}
 
-
+    /// <inheritdoc />
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);

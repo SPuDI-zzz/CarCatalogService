@@ -6,16 +6,75 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CarCatalogService.DAL.EntityFramework.Setup;
 
+/// <summary>
+///      class for seeding initial data into the database during application startup.
+/// </summary>
 public static class DbSeeder
 {
+    /// <summary>
+    ///     Helper method to create a scoped service scope from the provided <see cref="IServiceProvider"/>.
+    /// </summary>
+    /// <param name="serviceProvider">The <see cref="IServiceProvider"/> from which to create the service scope.</param>
+    /// <returns>A scoped service scope.</returns>
     private static IServiceScope ServiceScope(IServiceProvider serviceProvider) => serviceProvider.GetService<IServiceScopeFactory>()!.CreateScope();
+
+    /// <summary>
+    ///     Helper method to obtain an instance of the <see cref="IUserSevice"/> from the provided <see cref="IServiceProvider"/>.
+    /// </summary>
+    /// <param name="serviceProvider">The <see cref="IServiceProvider"/> from which to obtain the user service.</param>
+    /// <returns>An instance of the <see cref="IUserSevice"/>.</returns>
     private static IUserSevice UserService(IServiceProvider serviceProvider) => ServiceScope(serviceProvider).ServiceProvider.GetRequiredService<IUserSevice>();
+
+    /// <summary>
+    ///     Helper method to obtain an instance of the <see cref="MainDbContext"/> from the provided <see cref="IServiceProvider"/>.
+    /// </summary>
+    /// <param name="serviceProvider">The <see cref="IServiceProvider"/> from which to obtain the database context.</param>
+    /// <returns>An instance of the <see cref="MainDbContext"/>.</returns>
     private static MainDbContext DbContext(IServiceProvider serviceProvider) => ServiceScope(serviceProvider).ServiceProvider.GetRequiredService<IDbContextFactory<MainDbContext>>().CreateDbContext();
+
+    /// <summary>
+    ///     Helper method to obtain an instance of the <see cref="RoleManager{UserRole}"/> from the provided <see cref="IServiceProvider"/>.
+    /// </summary>
+    /// <param name="serviceProvider">The <see cref="IServiceProvider"/> from which to obtain the role manager.</param>
+    /// <returns>An instance of the <see cref="RoleManager{UserRole}"/>.</returns>
     private static RoleManager<UserRole> RoleManager(IServiceProvider serviceProvider) => ServiceScope(serviceProvider).ServiceProvider.GetRequiredService<RoleManager<UserRole>>();
 
+    /// <summary>
+    ///     Constant representing the default login name for the administrator user.
+    /// </summary>
     private const string Login = "Admin";
+
+    /// <summary>
+    ///     Constant representing the default password for the administrator user.
+    /// </summary>
     private const string Password = "Pass123#";
 
+    /// <summary>
+    /// Executes the database seeding process during application startup.
+    /// </summary>
+    /// <param name="serviceProvider">The <see cref="IServiceProvider"/> providing access to required services.</param>
+    /// <param name="addDemoData">A flag indicating whether to add demo data to the database.</param>
+    /// <param name="addAdmin">A flag indicating whether to add an administrator user to the database.</param>
+    public static async void Execute(IServiceProvider serviceProvider, bool addDemoData, bool addAdmin = true)
+    {
+        await ConfigureRoles(serviceProvider);
+
+        if (addAdmin)
+        {
+            await ConfigureAdministrator(serviceProvider);
+        }
+
+        if (addDemoData)
+        {
+            await ConfigureDemoData(serviceProvider);
+        }
+    }
+
+    /// <summary>
+    ///     Helper method to configure user roles in the application.
+    /// </summary>
+    /// <param name="serviceProvider">The <see cref="IServiceProvider"/> providing access to required services.</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     private static async Task ConfigureRoles(IServiceProvider serviceProvider)
     {
         using var roleManager = RoleManager(serviceProvider);
@@ -46,6 +105,11 @@ public static class DbSeeder
         }
     }
 
+    /// <summary>
+    ///     Helper method to configure the administrator user in the application.
+    /// </summary>
+    /// <param name="serviceProvider">The <see cref="IServiceProvider"/> providing access to required services.</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     private static async Task ConfigureAdministrator(IServiceProvider serviceProvider)
     {
         var userService = UserService(serviceProvider);
@@ -67,21 +131,11 @@ public static class DbSeeder
         }
     }
 
-    public static async void Execute(IServiceProvider serviceProvider, bool addDemoData, bool addAdmin = true)
-    {
-        await ConfigureRoles(serviceProvider);
-
-        if (addAdmin)
-        {
-            await ConfigureAdministrator(serviceProvider);
-        }
-
-        if (addDemoData)
-        {
-            await ConfigureDemoData(serviceProvider);
-        }
-    }
-
+    /// <summary>
+    ///     Helper method to configure demo data in the application.
+    /// </summary>
+    /// <param name="serviceProvider">The <see cref="IServiceProvider"/> providing access to required services.</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     private static async Task ConfigureDemoData(IServiceProvider serviceProvider)
     {
         await using var context = DbContext(serviceProvider);
