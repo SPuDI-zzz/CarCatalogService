@@ -16,10 +16,9 @@ public interface IAccountService
     /// <returns>
     ///     A <see cref="Task"/> representing the asynchronous operation.
     /// </returns>
-    Task Register(RegisterUserAccountModel model);
+    Task RegisterAsync(RegisterUserAccountModel model);
 
     /// <summary>
-    /// Тест Тест
     ///     Asynchronously performs user authentication based on the provided login information.
     /// </summary>
     /// <param name="model">A <see cref="LoginUserAccountModel"/> containing the user's login details.</param>
@@ -27,5 +26,5 @@ public interface IAccountService
     ///     A <see cref="Task"/> representing the asynchronous operation.
     ///     The task result is a string containing an authentication token if login is successful.
     /// </returns>
-    Task<string> Login(LoginUserAccountModel model);
+    Task<string> LoginAsync(LoginUserAccountModel model);
 }
