@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
-using CarCatalogService.Data.Entities;
-using CarCatalogService.Services.AccountService;
-using CarCatalogService.Services.AccountService.Models;
+using CarCatalogService.DAL.Entities;
+using CarCatalogService.BLL.Services.AccountService;
+using CarCatalogService.BLL.Services.AccountService.Models;
 using CarCatalogService.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -37,7 +37,7 @@ public class AccountController : Controller
         var loginModel = _mapper.Map<LoginUserAccountModel>(loginViewModel);
         try
         {
-            var token = await _accountService.Login(loginModel);
+            var token = await _accountService.LoginAsync(loginModel);
             HttpContext.Response.Cookies.Append("token", token,
                 new CookieOptions
                 {
@@ -71,7 +71,7 @@ public class AccountController : Controller
         var registerModel = _mapper.Map<RegisterUserAccountModel>(registerViewModel);
         try
         {
-            await _accountService.Register(registerModel);
+            await _accountService.RegisterAsync(registerModel);
         }
         catch (Exception e)
         {

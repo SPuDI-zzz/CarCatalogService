@@ -1,11 +1,14 @@
 ﻿using AutoMapper;
-using CarCatalogService.Services.CarService;
-using CarCatalogService.Services.CarService.Models;
-using CarCatalogService.Shared;
+using CarCatalogService.BLL.Services.CarService;
+using CarCatalogService.BLL.Services.CarService.Models;
+using CarCatalogService.DAL.Entities;
+using CarCatalogService.Shared.Const;
+using CarCatalogService.Shared.Extensions;
 using CarCatalogService.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
+using System.Security.Claims;
 
 namespace CarCatalogService.Controllers;
 
@@ -24,7 +27,7 @@ public class CarsController : Controller
     [HttpGet]
     public async Task<IActionResult> Index()
     {
-        var response = await _carService.GetAllCars();
+        var response = await _carService.GetAllCarsAsync();
         return View(response);
     }
 
@@ -40,13 +43,13 @@ public class CarsController : Controller
     public async Task<IActionResult> Create(AddCarViewModel carViewModel)
     {
         if (!ModelState.IsValid)
-        {
             return View(carViewModel);
-        }
+
+        carViewModel.UserId = User.GetUserId();
 
         var carModel = _mapper.Map<AddCarModel>(carViewModel);
 
-        await _carService.AddCar(carModel);
+        await _carService.AddCarAsync(carModel);
         return RedirectToAction(nameof(Index));
     }
 
@@ -54,7 +57,7 @@ public class CarsController : Controller
     [HttpGet]
     public async Task<IActionResult> Edit(long id)
     {
-        var car = await _carService.GetCar(id);
+        var car = await _carService.GetCarAsync(id);
         if (car == null)
             return View("Error");
 
@@ -74,7 +77,7 @@ public class CarsController : Controller
 
         var carModel = _mapper.Map<UpdateCarModel>(carViewModel);
 
-        await _carService.UpdateCar(id, carModel);
+        await _carService.UpdateCarAsync(id, carModel);
 
         return RedirectToAction(nameof(Index));
     }
@@ -83,7 +86,7 @@ public class CarsController : Controller
     [HttpGet]
     public async Task<IActionResult> Delete(long id)
     {
-        var carModel = await _carService.GetCar(id);
+        var carModel = await _carService.GetCarAsync(id);
         if (carModel == null)
             return View("Error");
 
@@ -94,11 +97,11 @@ public class CarsController : Controller
     [HttpPost, ActionName(nameof(Delete))]
     public async Task<IActionResult> DeleteCar(long id)
     {
-        var carModel = await _carService.GetCar(id);
+        var carModel = await _carService.GetCarAsync(id);
         if (carModel == null)
             return View("Error");
 
-        await _carService.DeleteCar(id);
+        await _carService.DeleteCarAsync(id);
 
         return RedirectToAction(nameof(Index));
     }

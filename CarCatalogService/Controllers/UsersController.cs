@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
-using CarCatalogService.Services.UserService;
-using CarCatalogService.Services.UserService.Models;
-using CarCatalogService.Shared;
+using CarCatalogService.BLL.Services.UserService;
+using CarCatalogService.BLL.Services.UserService.Models;
+using CarCatalogService.Shared.Const;
 using CarCatalogService.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -23,7 +23,7 @@ public class UsersController : Controller
     [HttpGet]
     public async Task<IActionResult> Index()
     {            
-        var response = await _userService.GetAllUsers();
+        var response = await _userService.GetAllUsersAsync();
         return View(response);
     }
 
@@ -42,15 +42,22 @@ public class UsersController : Controller
         }
 
         var userModel = _mapper.Map<AddUserModel>(userViewModel);
-
-        await _userService.AddUser(userModel);
+        try
+        {
+            await _userService.AddUserAsync(userModel);
+        }
+        catch (Exception e)
+        {
+            TempData["Error"] = e.Message;
+            return View(userViewModel);
+        }
         return RedirectToAction(nameof(Index));
     }
 
     [HttpGet]
     public async Task<IActionResult> Edit(long id)
     {
-        var user = await _userService.GetUser(id);
+        var user = await _userService.GetUserAsync(id);
         if (user == null)
             return View("Error");
 
@@ -70,7 +77,7 @@ public class UsersController : Controller
         var userModel = _mapper.Map<UpdateUserModel>(userViewModel);
         try
         {
-            await _userService.UpdateUser(id, userModel);
+            await _userService.UpdateUserAsync(id, userModel);
         }
         catch (Exception e)
         {
@@ -84,7 +91,7 @@ public class UsersController : Controller
     [HttpGet]
     public async Task<IActionResult> Delete(long id)
     {
-        var userModel = await _userService.GetUser(id);
+        var userModel = await _userService.GetUserAsync(id);
         if (userModel == null)
             return View("Error");
 
@@ -94,11 +101,11 @@ public class UsersController : Controller
     [HttpPost, ActionName(nameof(Delete))]
     public async Task<IActionResult> DeleteUser(long id)
     {
-        var userModel = await _userService.GetUser(id);
+        var userModel = await _userService.GetUserAsync(id);
         if (userModel == null)
             return View("Error");
 
-        await _userService.DeleteUser(id);
+        await _userService.DeleteUserAsync(id);
 
         return RedirectToAction(nameof(Index));
     }

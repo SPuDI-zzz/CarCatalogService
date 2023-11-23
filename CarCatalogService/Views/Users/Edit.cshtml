@@ -21,7 +21,6 @@
     <div class="mb-3">
         <label asp-for="Roles">Roles</label>
         <select asp-for="Roles" asp-items="@Html.GetEnumSelectList<RolesEnum>()">
-            <option selected="selected" disabled value="">--Select--</option>
         </select>
         <span asp-validation-for="Roles" class="text-danger"></span>
     </div>

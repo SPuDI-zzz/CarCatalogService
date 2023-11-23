@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using CarCatalogService.Services.AccountService.Models;
+using CarCatalogService.BLL.Services.AccountService.Models;
 using System.ComponentModel.DataAnnotations;
 
 namespace CarCatalogService.ViewModels;

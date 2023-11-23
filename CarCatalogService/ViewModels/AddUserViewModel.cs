@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using CarCatalogService.Services.UserService.Models;
-using CarCatalogService.Shared;
+using CarCatalogService.BLL.Services.UserService.Models;
+using CarCatalogService.Shared.Enum;
 using System.ComponentModel.DataAnnotations;
 
 namespace CarCatalogService.ViewModels;

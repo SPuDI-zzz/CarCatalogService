@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using CarCatalogService.Services.AccountService.Models;
+using CarCatalogService.BLL.Services.AccountService.Models;
 using System.ComponentModel.DataAnnotations;
 
 namespace CarCatalogService.ViewModels;
@@ -23,7 +23,6 @@ public class RegisterViewModelPofile : Profile
 {
     public RegisterViewModelPofile()
     {
-        CreateMap<RegisterViewModel, RegisterUserAccountModel>()
-            .ForMember(dist => dist.Role, opt => opt.MapFrom(dist => "User"));
+        CreateMap<RegisterViewModel, RegisterUserAccountModel>();
     }
 }

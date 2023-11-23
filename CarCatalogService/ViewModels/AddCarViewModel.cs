@@ -1,13 +1,17 @@
 ﻿using AutoMapper;
-using CarCatalogService.Services.CarService.Models;
+using CarCatalogService.BLL.Services.CarService.Models;
+using System.ComponentModel.DataAnnotations;
 
 namespace CarCatalogService.ViewModels;
 
 public class AddCarViewModel
 {
-    public required string Mark { get; set; }
-    public required string Model { get; set; }
-    public required string Color { get; set; }
+    [Required(ErrorMessage = "Mark is required")]
+    public string Mark { get; set; } = default!;
+    [Required(ErrorMessage = "Model is required")]
+    public required string Model { get; set; } = default!;
+    [Required(ErrorMessage = "Color is required")]
+    public required string Color { get; set; } = default!;
     public long UserId { get; set; }
 }
 
