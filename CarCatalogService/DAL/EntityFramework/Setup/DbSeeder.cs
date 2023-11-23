@@ -1,10 +1,10 @@
-﻿using CarCatalogService.Data.Entities;
-using CarCatalogService.Services.UserService;
-using CarCatalogService.Shared;
+﻿using CarCatalogService.BLL.Services.UserService;
+using CarCatalogService.DAL.Entities;
+using CarCatalogService.Shared.Const;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
-namespace CarCatalogService.Data.EntityFramework.Setup;
+namespace CarCatalogService.DAL.EntityFramework.Setup;
 
 public static class DbSeeder
 {
@@ -49,15 +49,16 @@ public static class DbSeeder
     private static async Task ConfigureAdministrator(IServiceProvider serviceProvider)
     {
         var userService = UserService(serviceProvider);
-        //var test = await userService.GetAllUsers();
-        //var userRole = test.Select(user => user.Roles);
-        var isZeroAdminUsers = !(await userService.GetAllUsers())
+
+        var isZeroAdminUsers = !(await userService.GetAllUsersAsync())
             .Where(user => user.Roles
-                .Where(role => role.Equals(AppRoles.Admin)).Any()).Any();
+                .Where(role => role.Equals(AppRoles.Admin))
+                .Any())
+            .Any();
 
         if (isZeroAdminUsers)
         {
-            await userService.AddUser(new()
+            await userService.AddUserAsync(new()
             {
                 Login = Login,
                 Password = Password,

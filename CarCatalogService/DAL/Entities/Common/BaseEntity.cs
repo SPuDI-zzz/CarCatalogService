@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 
-namespace CarCatalogService.Data.Entities.Common
+namespace CarCatalogService.DAL.Entities.Common
 {
     public abstract class BaseEntity
     {

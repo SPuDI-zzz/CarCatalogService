@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace CarCatalogService.Data.Entities;
+namespace CarCatalogService.DAL.Entities;
 
 public class UserRoleOwners : IdentityUserRole<long>
 {

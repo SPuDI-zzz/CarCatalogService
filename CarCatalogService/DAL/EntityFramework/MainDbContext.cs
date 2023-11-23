@@ -1,9 +1,9 @@
-﻿using CarCatalogService.Data.Entities;
+﻿using CarCatalogService.DAL.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace CarCatalogService.Data.EntityFramework;
+namespace CarCatalogService.DAL.EntityFramework;
 
 public class MainDbContext : IdentityDbContext<User, UserRole, long, IdentityUserClaim<long>, UserRoleOwners, IdentityUserLogin<long>, IdentityRoleClaim<long>, IdentityUserToken<long>>
 {

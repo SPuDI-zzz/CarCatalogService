@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace CarCatalogService.Migrations
+namespace CarCatalogService.DAL.Migrations
 {
     /// <inheritdoc />
     public partial class add_user_role_owners : Migration

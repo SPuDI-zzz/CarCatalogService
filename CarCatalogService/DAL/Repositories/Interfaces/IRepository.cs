@@ -1,4 +1,4 @@
-﻿namespace CarCatalogService.Data.Repositories.Interfaces;
+﻿namespace CarCatalogService.DAL.Repositories.Interfaces;
 
 public interface IRepository<T> where T : class
 {

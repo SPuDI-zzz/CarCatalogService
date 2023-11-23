@@ -1,8 +1,8 @@
-﻿using CarCatalogService.Data.Entities.Common;
+﻿using CarCatalogService.DAL.Entities.Common;
 using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
 
-namespace CarCatalogService.Data.Entities
+namespace CarCatalogService.DAL.Entities
 {
     public class User : IdentityUser<long>
     {

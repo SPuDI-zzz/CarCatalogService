@@ -3,7 +3,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace CarCatalogService.Migrations
+namespace CarCatalogService.DAL.Migrations
 {
     /// <inheritdoc />
     public partial class Init : Migration

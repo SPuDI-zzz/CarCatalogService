@@ -1,11 +1,11 @@
-﻿using CarCatalogService.Data.Entities;
-using CarCatalogService.Data.EntityFramework;
-using CarCatalogService.Data.Repositories.Interfaces;
+﻿using CarCatalogService.DAL.Entities;
+using CarCatalogService.DAL.EntityFramework;
+using CarCatalogService.DAL.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
 using System.Xml.Schema;
 
-namespace CarCatalogService.Data.Repositories.CarRepository;
+namespace CarCatalogService.DAL.Repositories.CarRepository;
 
 public class CarRepository : IRepository<Car>
 {

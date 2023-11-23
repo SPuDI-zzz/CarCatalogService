@@ -1,6 +1,6 @@
-﻿using CarCatalogService.Data.Entities.Common;
+﻿using CarCatalogService.DAL.Entities.Common;
 
-namespace CarCatalogService.Data.Entities;
+namespace CarCatalogService.DAL.Entities;
 
 public class Car : BaseEntity
 {

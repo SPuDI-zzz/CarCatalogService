@@ -1,12 +1,12 @@
-using CarCatalogService.Data.Entities;
-using CarCatalogService.Data.EntityFramework;
-using CarCatalogService.Data.EntityFramework.Setup;
-using CarCatalogService.Data.Repositories.CarRepository;
-using CarCatalogService.Data.Repositories.Interfaces;
-using CarCatalogService.Services.AccountService;
-using CarCatalogService.Services.CarService;
-using CarCatalogService.Services.UserService;
-using CarCatalogService.Shared;
+using CarCatalogService.BLL.Services.AccountService;
+using CarCatalogService.BLL.Services.CarService;
+using CarCatalogService.BLL.Services.UserService;
+using CarCatalogService.DAL.Entities;
+using CarCatalogService.DAL.EntityFramework;
+using CarCatalogService.DAL.EntityFramework.Setup;
+using CarCatalogService.DAL.Repositories.CarRepository;
+using CarCatalogService.DAL.Repositories.Interfaces;
+using CarCatalogService.Shared.Const;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -81,11 +81,6 @@ services.AddAuthorization(options =>
     .RequireAuthenticatedUser()
     .AddAuthenticationSchemes(IdentityConstants.ApplicationScheme, "jwt")
     .RequireRole(AppRoles.Admin));
-
-    options.AddPolicy("AllowAnonymousPolicy", policy => policy
-    .RequireAuthenticatedUser()
-    .AddAuthenticationSchemes(IdentityConstants.ApplicationScheme, "jwt")
-    .RequireAssertion(context => true));
 });
 
 services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
