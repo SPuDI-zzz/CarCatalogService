@@ -89,7 +89,7 @@ public class UserService : IUserSevice
 
     /// <inheritdoc/>
     /// /// <exception cref="Exception">
-    ///     Thrown when updating the user account fails. The exception message provides details about the specific error.
+    ///     Thrown when updating the user account fails.
     /// </exception>
     public async Task UpdateUserAsync(long userId, UpdateUserModel model)
     {

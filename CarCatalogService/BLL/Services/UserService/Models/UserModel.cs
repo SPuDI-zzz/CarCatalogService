@@ -1,7 +1,4 @@
-﻿using AutoMapper;
-using CarCatalogService.DAL.Entities;
-
-namespace CarCatalogService.BLL.Services.UserService.Models;
+﻿namespace CarCatalogService.BLL.Services.UserService.Models;
 
 /// <summary>
 ///     Represents a model that encapsulates information about a user.

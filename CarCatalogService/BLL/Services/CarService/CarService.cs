@@ -58,7 +58,6 @@ public class CarService : ICarService
     /// <inheritdoc/>
     /// <exception cref="Exception">
     ///     Thrown when the specified car is not found based on the provided <paramref name="carId"/>.
-    ///     The exception message provides details about the specific error.
     /// </exception>
     public async Task UpdateCarAsync(long carId, UpdateCarModel model)
     {

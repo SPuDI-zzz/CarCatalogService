@@ -56,7 +56,7 @@ public class AccountService : IAccountService
     /// <inheritdoc />
     /// <exception cref="Exception">
     ///     Thrown when the login process encounters an error, such as an invalid username,
-    ///     wrong password. The exception message provides details about the specific error.
+    ///     wrong password.
     /// </exception>
     public async Task<string> LoginAsync(LoginUserAccountModel model)
     {
