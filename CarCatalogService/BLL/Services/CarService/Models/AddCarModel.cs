@@ -29,7 +29,6 @@ public class AddCarModel
     /// <summary>
     ///     Gets or sets the unique identifier for the user associated with the new car.
     /// </summary>
-    /// <remarks>This property is required.</remarks>
     public long UserId { get; set; }
 }
 

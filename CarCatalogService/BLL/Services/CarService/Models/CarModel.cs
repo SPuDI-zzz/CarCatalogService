@@ -34,7 +34,6 @@ public class CarModel
     /// <summary>
     /// Gets or sets the unique identifier for the user associated with the car.
     /// </summary>
-    /// <remarks>This property is required.</remarks>
     public long UserId { get; set; }
 }
 
