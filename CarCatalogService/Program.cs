@@ -6,6 +6,7 @@ using CarCatalogService.DAL.EntityFramework;
 using CarCatalogService.DAL.EntityFramework.Setup;
 using CarCatalogService.DAL.Repositories.CarRepository;
 using CarCatalogService.DAL.Repositories.Interfaces;
+using CarCatalogService.Middlewares;
 using CarCatalogService.Shared.Const;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -92,6 +93,8 @@ services.AddScoped<IAccountService, AccountService>();
 
 var app = builder.Build();
 
+app.UseMiddleware<AccessDeniedMiddleware>();
+
 app.UseRouting();
 
 app.MapControllerRoute(
@@ -99,9 +102,21 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.UseStaticFiles();
-
+/*app.UseWhen(
+    context => context.Request.Path == "/cars",
+    appBuilder =>
+    {
+        appBuilder.Use(async (context, next) =>
+        {
+            await next();
+            if (context.Response.StatusCode == 401)
+                context.Response.Redirect("/Account/Login");
+        });
+    });*/
 app.UseAuthentication();
 app.UseAuthorization();
+
+
 
 app.MapControllers();
 

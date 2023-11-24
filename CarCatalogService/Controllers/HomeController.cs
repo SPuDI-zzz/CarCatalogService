@@ -34,4 +34,9 @@ public class HomeController : Controller
     {
         return View();
     }
+
+    public IActionResult ErrorPage(string statusCode)
+    {
+        return View(statusCode);
+    }
 }
