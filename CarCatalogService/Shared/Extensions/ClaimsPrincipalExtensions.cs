@@ -14,17 +14,10 @@ public static class ClaimsPrincipalExtensions
     /// <returns>
     ///     The unique identifier of the user if found; otherwise, the default value for <see cref="long"/>.
     /// </returns>
-    /// <remarks>
-    ///     This method extracts the unique identifier of the user from the claims associated with the provided
-    ///     <paramref name="user"/>. It specifically looks for the claim with the type <see cref="ClaimTypes.NameIdentifier"/>
-    ///     and attempts to parse its value as a long. If successful, the parsed user ID is returned; otherwise,
-    ///     the default value for <see cref="long"/> is returned.
-    /// </remarks>
     public static long GetUserId(this ClaimsPrincipal user)
     {
         var nameIdentifier = user.FindFirstValue(ClaimTypes.NameIdentifier);
-        if (long.TryParse(nameIdentifier, out var userId))
-            return userId;
-        return default;
+        _ = long.TryParse(nameIdentifier, out var userId);
+        return userId;
     }
 }

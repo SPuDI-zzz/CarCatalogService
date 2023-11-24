@@ -27,9 +27,19 @@ public class MainDbContext : IdentityDbContext<User, UserRole, long, IdentityUse
         base.OnModelCreating(modelBuilder);
 
         modelBuilder.Entity<User>().ToTable("users");
-        modelBuilder.Entity<User>().HasMany(val => val.UserRoles).WithOne(val => val.User).HasForeignKey(val => val.UserId).IsRequired();
+        modelBuilder.Entity<User>()
+            .HasMany(user => user.UserRoles)
+            .WithOne(userRoles => userRoles.User)
+            .HasForeignKey(userRoles => userRoles.UserId)
+            .IsRequired();
+
         modelBuilder.Entity<UserRole>().ToTable("user_roles");
-        modelBuilder.Entity<UserRole>().HasMany(val => val.UserRoles).WithOne(val => val.Role).HasForeignKey(val => val.RoleId).IsRequired();
+        modelBuilder.Entity<UserRole>()
+            .HasMany(role => role.UserRoles)
+            .WithOne(userRoles => userRoles.Role)
+            .HasForeignKey(userRoles => userRoles.RoleId)
+            .IsRequired();
+
         modelBuilder.Entity<IdentityUserToken<long>>().ToTable("user_tokens");
         modelBuilder.Entity<UserRoleOwners>().ToTable("user_role_owners");
         modelBuilder.Entity<IdentityRoleClaim<long>>().ToTable("user_role_claims");
@@ -37,12 +47,15 @@ public class MainDbContext : IdentityDbContext<User, UserRole, long, IdentityUse
         modelBuilder.Entity<IdentityUserClaim<long>>().ToTable("user_claims");
 
         modelBuilder.Entity<Car>().ToTable("cars");
-        modelBuilder.Entity<Car>().Property(val => val.Mark).IsRequired();
-        modelBuilder.Entity<Car>().Property(val => val.Mark).HasMaxLength(100);
-        modelBuilder.Entity<Car>().Property(val => val.Model).IsRequired();
-        modelBuilder.Entity<Car>().Property(val => val.Model).HasMaxLength(100);
-        modelBuilder.Entity<Car>().Property(val => val.Color).IsRequired();
-        modelBuilder.Entity<Car>().Property(val => val.Color).HasMaxLength(100);
-        modelBuilder.Entity<Car>().HasOne(val => val.User).WithMany(val => val.Cars).HasForeignKey(val => val.UserId);
+        modelBuilder.Entity<Car>().Property(car => car.Mark).IsRequired();
+        modelBuilder.Entity<Car>().Property(car => car.Mark).HasMaxLength(100);
+        modelBuilder.Entity<Car>().Property(car => car.Model).IsRequired();
+        modelBuilder.Entity<Car>().Property(car => car.Model).HasMaxLength(100);
+        modelBuilder.Entity<Car>().Property(car => car.Color).IsRequired();
+        modelBuilder.Entity<Car>().Property(car => car.Color).HasMaxLength(100);
+        modelBuilder.Entity<Car>()
+            .HasOne(car => car.User)
+            .WithMany(user => user.Cars)
+            .HasForeignKey(car => car.UserId);
     }
 }

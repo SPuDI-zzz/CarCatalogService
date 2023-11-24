@@ -20,6 +20,6 @@ public class AddUserViewModelProfile : Profile
     public AddUserViewModelProfile()
     {
         CreateMap<AddUserViewModel, AddUserModel>()
-            .ForMember(dest => dest.Roles, opt => opt.MapFrom(src => src.Roles.Select(val => val.ToString())));
+            .ForMember(dest => dest.Roles, opt => opt.MapFrom(src => src.Roles.Select(role => role.ToString())));
     }
 }
