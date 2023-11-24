@@ -1,11 +1,12 @@
-using CarCatalogService.Data;
-using CarCatalogService.Data.Entities;
-using CarCatalogService.Data.Setup;
-using CarCatalogService.Services.AccountService;
-using CarCatalogService.Services.CarService;
-using CarCatalogService.Services.RoleService;
-using CarCatalogService.Services.UserService;
-using CarCatalogService.Shared;
+using CarCatalogService.BLL.Services.AccountService;
+using CarCatalogService.BLL.Services.CarService;
+using CarCatalogService.BLL.Services.UserService;
+using CarCatalogService.DAL.Entities;
+using CarCatalogService.DAL.EntityFramework;
+using CarCatalogService.DAL.EntityFramework.Setup;
+using CarCatalogService.DAL.Repositories.CarRepository;
+using CarCatalogService.DAL.Repositories.Interfaces;
+using CarCatalogService.Shared.Const;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -83,23 +84,13 @@ services.AddAuthorization(options =>
 });
 
 services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
 services.AddScoped<ICarService, CarService>();
-services.AddScoped<IRoleService, RoleService>();
 services.AddScoped<IUserSevice, UserService>();
+services.AddScoped<IRepository<Car>, CarRepository>();
 services.AddScoped<IAccountService, AccountService>();
 
 var app = builder.Build();
-
-//app.UseSession();
-/*app.Use(async (context, next) =>
-{
-    var token = context.Request.Cookies["Token"];
-    if (!string.IsNullOrEmpty(token))
-    {
-        context.Request.Headers.Add("Authorization", "Bearer " + token);
-    }
-    await next();
-});*/
 
 app.UseRouting();
 
@@ -111,7 +102,7 @@ app.UseStaticFiles();
 
 app.UseAuthentication();
 app.UseAuthorization();
-//app.UseCookiePolicy();
+
 app.MapControllers();
 
 DbInitializer.Execute(app.Services);

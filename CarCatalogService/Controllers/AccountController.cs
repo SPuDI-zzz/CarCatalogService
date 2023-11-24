@@ -1,30 +1,52 @@
 ﻿using AutoMapper;
-using CarCatalogService.Data.Entities;
-using CarCatalogService.Services.AccountService;
-using CarCatalogService.Services.AccountService.Models;
+using CarCatalogService.DAL.Entities;
+using CarCatalogService.BLL.Services.AccountService;
+using CarCatalogService.BLL.Services.AccountService.Models;
 using CarCatalogService.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CarCatalogService.Controllers;
 
+/// <summary>
+///     Controller responsible for handling user authentication and account-related actions.
+/// </summary>
 public class AccountController : Controller
 {
     private readonly IAccountService _accountService;
     private readonly IMapper _mapper;
+    private readonly UserManager<User> _userManager;
 
-    public AccountController(IAccountService accountService, IMapper mapper)
+    /// <summary>
+    ///     Initializes a new instance of the <see cref="AccountController"/> class.
+    /// </summary>
+    /// <param name="accountService">The service responsible for user account operations.</param>
+    /// <param name="mapper">The AutoMapper instance for mapping between models.</param>
+    /// <param name="signInManager">The SignInManager for handling user sign-in.</param>
+    /// <param name="userManager">The UserManager for managing user-related operations.</param>
+    public AccountController(IAccountService accountService, IMapper mapper, UserManager<User> userManager)
     {
         _accountService = accountService;
         _mapper = mapper;
+        _userManager = userManager;
     }
 
+    /// <summary>
+    ///     Displays the login view.
+    /// </summary>
+    /// <returns>The login view.</returns>
     public IActionResult Login()
     {
         return View();
     }
 
-    // TODO
+    /// <summary>
+    ///     Handles the POST request for user login.
+    /// </summary>
+    /// <param name="loginViewModel">The view model containing user login information.</param>
+    /// <returns>
+    ///     Redirects to the home page on successful login; otherwise, returns the login view with an error message.
+    /// </returns>
     [HttpPost]
     public async Task<IActionResult> Login(LoginViewModel loginViewModel)
     {
@@ -34,7 +56,7 @@ public class AccountController : Controller
         var loginModel = _mapper.Map<LoginUserAccountModel>(loginViewModel);
         try
         {
-            var token = await _accountService.Login(loginModel);
+            var token = await _accountService.LoginAsync(loginModel);
             HttpContext.Response.Cookies.Append("token", token,
                 new CookieOptions
                 {
@@ -50,16 +72,26 @@ public class AccountController : Controller
             TempData["Error"] = "Wrong credentials. Please try again.";
             return View(loginViewModel);
         }
-        
-        
+
         return RedirectToAction("Index", "Home");
     }
 
+    /// <summary>
+    ///     Displays the registration view.
+    /// </summary>
+    /// <returns>The registration view.</returns>
     public IActionResult Register()
     {
         return View();
     }
 
+    /// <summary>
+    ///     Handles the POST request for user registration.
+    /// </summary>
+    /// <param name="registerViewModel">The view model containing user registration information.</param>
+    /// <returns>
+    ///     Redirects to the login page on successful registration; otherwise, returns the registration view with an error message.
+    /// </returns>
     [HttpPost]
     public async Task<IActionResult> Register(RegisterViewModel registerViewModel)
     {
@@ -69,7 +101,7 @@ public class AccountController : Controller
         var registerModel = _mapper.Map<RegisterUserAccountModel>(registerViewModel);
         try
         {
-            await _accountService.Register(registerModel);
+            await _accountService.RegisterAsync(registerModel);
         }
         catch (Exception e)
         {
@@ -78,5 +110,16 @@ public class AccountController : Controller
         }
 
         return RedirectToAction(nameof(Login));
+    }
+
+    /// <summary>
+    ///     Logs out the user by deleting the authentication token cookie.
+    /// </summary>
+    /// <returns>Redirects to the login page.</returns>
+    [HttpGet]
+    public IActionResult Logout()
+    {
+        HttpContext.Response.Cookies.Delete("token");
+        return RedirectToAction("Login", "Account");
     }
 }
