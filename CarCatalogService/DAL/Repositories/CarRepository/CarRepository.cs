@@ -35,18 +35,18 @@ public class CarRepository : IRepository<Car>
     }
 
     /// <inheritdoc />
-    /// <exception cref="Exception">
-    ///     Thrown if the car entity with the specified identifier is not found.
-    /// </exception>
-    public async Task DeleteAsync(long id)
+    public async Task<bool> DeleteAsync(long id)
     {
         using var context = await _dbContextFactory.CreateDbContextAsync();
 
-        var car = await context.Cars.FirstOrDefaultAsync(car => car.Id.Equals(id))
-            ?? throw new Exception($"The car (id: {id}) was not found");
+        var car = await context.Cars.FirstOrDefaultAsync(car => car.Id.Equals(id));
+
+        if (car == null)
+            return false;
 
         context.Remove(car);
         await context.SaveChangesAsync();
+        return true;
     }
 
     /// <inheritdoc />

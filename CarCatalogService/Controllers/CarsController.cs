@@ -64,7 +64,7 @@ public class CarsController : Controller
     /// <param name="carViewModel">The view model containing information for creating a new car.</param>
     /// <returns>
     ///     Redirects to the car list view on successful creation; otherwise,
-    ///     returns the create view with an error message.
+    ///     returns a <see cref="BadRequestResult"/>.
     /// </returns>
     /// <remarks>
     ///     This action requires users to have the <see cref="AppRoles.Manager"/>
@@ -75,7 +75,7 @@ public class CarsController : Controller
     public async Task<IActionResult> Create(AddCarViewModel carViewModel)
     {
         if (!ModelState.IsValid)
-            return View(carViewModel);
+            return BadRequest();
 
         carViewModel.UserId = User.GetUserId();
 
@@ -91,7 +91,7 @@ public class CarsController : Controller
     /// <param name="id">The unique identifier of the car to edit</param>
     /// <returns>
     ///     If the car is found, returns the edit confirmation view with details of the car;
-    ///     otherwise, returns an error view.
+    ///     otherwise, returns a <see cref="NotFoundResult"/>.
     /// </returns>
     /// <remarks>
     ///     This action requires users to have the <see cref="AppRoles.Manager"/>
@@ -103,7 +103,7 @@ public class CarsController : Controller
     {
         var car = await _carService.GetCarAsync(id);
         if (car == null)
-            return View("Error");
+            return NotFound();
 
         var carViewModel = _mapper.Map<EditCarViewModel>(car);
         return View(carViewModel);
@@ -115,7 +115,8 @@ public class CarsController : Controller
     /// <param name="id">The unique identifier of the car to edit.</param>
     /// <param name="carViewModel">The view model containing updated information for the car.</param>
     /// <returns>
-    ///     Redirects to the car list view on successful update; otherwise, returns the edit view with an error message.
+    ///     Redirects to the car list view on successful update; otherwise,
+    ///     returns a <see cref="BadRequestResult"/> or a <see cref="NotFoundResult"/>.
     /// </returns>
     /// <remarks>
     ///     This action requires users to have the <see cref="AppRoles.Manager"/>
@@ -126,14 +127,14 @@ public class CarsController : Controller
     public async Task<IActionResult> Edit(long id, EditCarViewModel carViewModel)
     {
         if (!ModelState.IsValid)
-        {
-            ModelState.AddModelError("", "Failed to edit car");
-            return View(nameof(Edit), carViewModel);
-        }
+            return BadRequest();
 
+        carViewModel.UserId = User.GetUserId();
         var carModel = _mapper.Map<UpdateCarModel>(carViewModel);
 
-        await _carService.UpdateCarAsync(id, carModel);
+        var isEdited = await _carService.UpdateCarAsync(id, carModel);
+        if (!isEdited) 
+            return NotFound();
 
         return RedirectToAction(nameof(Index));
     }
@@ -144,7 +145,7 @@ public class CarsController : Controller
     /// <param name="id">The unique identifier of the car to delete</param>
     /// <returns>
     ///     If the car is found, returns the delete confirmation view with details of the car;
-    ///     otherwise, returns an error view.
+    ///     otherwise, returns a <see cref="NotFoundResult"/>.
     /// </returns>
     /// <remarks>
     ///     This action requires users to have the <see cref="AppRoles.Manager"/>
@@ -156,7 +157,7 @@ public class CarsController : Controller
     {
         var carModel = await _carService.GetCarAsync(id);
         if (carModel == null)
-            return View("Error");
+            return NotFound();
 
         return View(carModel);
     }
@@ -166,7 +167,8 @@ public class CarsController : Controller
     /// </summary>
     /// <param name="id">The unique identifier of the car to delete.</param>
     /// <returns>
-    ///     Redirects to the car list view on successful delete; otherwise, returns an error view.
+    ///     Redirects to the car list view on successful delete; otherwise,
+    ///     returns a <see cref="NotFoundResult"/>.
     /// </returns>
     /// <remarks>
     ///     This action requires users to have the <see cref="AppRoles.Manager"/>
@@ -176,11 +178,9 @@ public class CarsController : Controller
     [HttpPost, ActionName(nameof(Delete))]
     public async Task<IActionResult> DeleteCar(long id)
     {
-        var carModel = await _carService.GetCarAsync(id);
-        if (carModel == null)
-            return View("Error");
-
-        await _carService.DeleteCarAsync(id);
+        var isDeleted = await _carService.DeleteCarAsync(id);
+        if (!isDeleted)
+            return NotFound();
 
         return RedirectToAction(nameof(Index));
     }

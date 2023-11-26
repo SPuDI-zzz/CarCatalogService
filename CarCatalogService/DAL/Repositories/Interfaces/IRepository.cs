@@ -41,6 +41,9 @@ public interface IRepository<T> where T : class
     /// Deletes an entity of type <typeparamref name="T"/> by its identifier asynchronously.
     /// </summary>
     /// <param name="id">The identifier of the entity to delete.</param>
-    /// <returns>A task representing the asynchronous operation.</returns>
-    Task DeleteAsync(long id);
+    /// <returns>
+    ///     A task representing the asynchronous operation.
+    ///     The result is a <see cref="bool"/> indicating whether the deletion was successful (true) or not (false).
+    /// </returns>
+    Task<bool> DeleteAsync(long id);
 }

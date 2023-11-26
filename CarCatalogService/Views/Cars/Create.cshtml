@@ -4,7 +4,12 @@
 *@
 @{
 }
-
+@if (TempData["Error"] != null)
+{
+    <div class="col-md-12 alert alert-danger">
+        <span><b>Sorry!</b> - @TempData["Error"] </span>
+    </div>
+}
 <form method="post" asp-action="Create">
     <div class="mb-3">
         <label asp-for="Mark">Mark</label>

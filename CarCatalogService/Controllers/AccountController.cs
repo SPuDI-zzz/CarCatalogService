@@ -45,33 +45,33 @@ public class AccountController : Controller
     /// </summary>
     /// <param name="loginViewModel">The view model containing user login information.</param>
     /// <returns>
-    ///     Redirects to the home page on successful login; otherwise, returns the login view with an error message.
+    ///     If the login is successful, it sets a token cookie and redirects to the home page;
+    ///     otherwise, it returns the login view with an error message or a <see cref="BadRequestResult"/>.
     /// </returns>
     [HttpPost]
     public async Task<IActionResult> Login(LoginViewModel loginViewModel)
     {
         if (!ModelState.IsValid)
-            return View(loginViewModel);
+            return BadRequest();
 
         var loginModel = _mapper.Map<LoginUserAccountModel>(loginViewModel);
-        try
-        {
-            var token = await _accountService.LoginAsync(loginModel);
-            HttpContext.Response.Cookies.Append("token", token,
-                new CookieOptions
-                {
-                    Expires = DateTimeOffset.Now.AddHours(3),
-                    HttpOnly = true,
-                    Secure = true,
-                    IsEssential = true,
-                    SameSite = SameSiteMode.None,
-                });
-        }
-        catch (Exception)
+
+        var responseModel = await _accountService.LoginAsync(loginModel);
+        if (responseModel.IsError)
         {
             TempData["Error"] = "Wrong credentials. Please try again.";
             return View(loginViewModel);
         }
+
+        HttpContext.Response.Cookies.Append("token", responseModel.Token,
+            new CookieOptions
+            {
+                Expires = DateTimeOffset.Now.AddHours(3),
+                HttpOnly = true,
+                Secure = true,
+                IsEssential = true,
+                SameSite = SameSiteMode.None,
+            });
 
         return RedirectToAction("Index", "Home");
     }
@@ -90,25 +90,24 @@ public class AccountController : Controller
     /// </summary>
     /// <param name="registerViewModel">The view model containing user registration information.</param>
     /// <returns>
-    ///     Redirects to the login page on successful registration; otherwise, returns the registration view with an error message.
+    ///     Redirects to the login page on successful registration; otherwise, 
+    ///     returns the registration view with an error message or a <see cref="BadRequestResult"/>.
     /// </returns>
     [HttpPost]
     public async Task<IActionResult> Register(RegisterViewModel registerViewModel)
     {
         if (!ModelState.IsValid) 
-            return View(registerViewModel);
+            return BadRequest();
 
         var registerModel = _mapper.Map<RegisterUserAccountModel>(registerViewModel);
-        try
+
+        var responseModel = await _accountService.RegisterAsync(registerModel);
+        if (responseModel.IsError)
         {
-            await _accountService.RegisterAsync(registerModel);
-        }
-        catch (Exception e)
-        {
-            TempData["Error"] = e.Message;
+            TempData["Error"] = responseModel.ErrorMessage;
             return View(registerViewModel);
         }
-
+        
         return RedirectToAction(nameof(Login));
     }
 

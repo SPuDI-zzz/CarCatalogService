@@ -46,8 +46,9 @@ public interface ICarService
     /// <param name="model">A <see cref="UpdateCarModel"/> containing the updated details for the car.</param>
     /// <returns>
     ///     A <see cref="Task"/> representing the asynchronous operation.
+    ///     The result is a <see cref="bool"/> indicating whether the edeting was successful (true) or not (false).
     /// </returns>
-    Task UpdateCarAsync(long carId, UpdateCarModel model);
+    Task<bool> UpdateCarAsync(long carId, UpdateCarModel model);
 
     /// <summary>
     ///     Asynchronously deletes a car from the system based on its unique identifier.
@@ -55,6 +56,7 @@ public interface ICarService
     /// <param name="carId">The unique identifier of the car to be deleted.</param>
     /// <returns>
     ///     A <see cref="Task"/> representing the asynchronous operation.
+    ///     The result is a <see cref="bool"/> indicating whether the deletion was successful (true) or not (false).
     /// </returns>
-    Task DeleteCarAsync(long carId);
+    Task<bool> DeleteCarAsync(long carId);
 }

@@ -32,9 +32,9 @@ public class CarService : ICarService
     }
 
     /// <inheritdoc/>
-    public async Task DeleteCarAsync(long carId)
+    public async Task<bool> DeleteCarAsync(long carId)
     {
-        await _carRepository.DeleteAsync(carId);
+        return await _carRepository.DeleteAsync(carId);
     }
 
     /// <inheritdoc/>
@@ -56,16 +56,16 @@ public class CarService : ICarService
     }
 
     /// <inheritdoc/>
-    /// <exception cref="Exception">
-    ///     Thrown when the specified car is not found based on the provided <paramref name="carId"/>.
-    /// </exception>
-    public async Task UpdateCarAsync(long carId, UpdateCarModel model)
+    public async Task<bool> UpdateCarAsync(long carId, UpdateCarModel model)
     {
-        var car = await _carRepository.GetAsync(carId)
-            ?? throw new Exception($"The car (id: {carId}) was not found");
+        var car = await _carRepository.GetAsync(carId);
+
+        if (car == null)
+            return false;
 
         car = _mapper.Map(model, car);
 
         await _carRepository.UpdateAsync(car);
+        return true;
     }
 }

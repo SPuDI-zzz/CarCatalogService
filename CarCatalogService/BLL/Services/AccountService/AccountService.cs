@@ -36,53 +36,61 @@ public class AccountService : IAccountService
     }
 
     /// <inheritdoc />
-    /// <exception cref="Exception">
-    ///     Thrown when the registration process encounters an error, such as an existing username,
-    ///     an issue creating the user account.
-    /// </exception>
-    public async Task RegisterAsync(RegisterUserAccountModel model)
+    public async Task<RegisterUserAccountResponseModel> RegisterAsync(RegisterUserAccountModel model)
     {
         var user = _mapper.Map<User>(model);
 
         var resultCreateUser = await _userManager.CreateAsync(user, model.Password);
 
         if (!resultCreateUser.Succeeded)
-            throw new Exception($"Creating user account is wrong" +
-                $"{string.Join(", ", resultCreateUser.Errors.Select(s => s.Description))}");
+            return new RegisterUserAccountResponseModel
+            {
+                IsError = true,
+                ErrorMessage = $"Creating user account is wrong" +
+                    $"{string.Join(", ", resultCreateUser.Errors.Select(s => s.Description))}"
+            };
 
         await _userManager.AddToRoleAsync(user, AppRoles.User);
+        return new();
     }
 
     /// <inheritdoc />
-    /// <exception cref="Exception">
-    ///     Thrown when the login process encounters an error, such as an invalid username,
-    ///     wrong password.
-    /// </exception>
-    public async Task<string> LoginAsync(LoginUserAccountModel model)
+    public async Task<LoginUserAccountResponseModel> LoginAsync(LoginUserAccountModel model)
     {
-        var user = await _userManager.FindByNameAsync(model.UserName)
-            ?? throw new Exception($"There is no user with this username {model.UserName}");
+        var user = await _userManager.FindByNameAsync(model.UserName);
+        if (user == null)
+            return new LoginUserAccountResponseModel
+            {
+                IsError = true,
+            };
 
         var checkPassword = await _userManager.CheckPasswordAsync(user, model.Password);
         if (!checkPassword)
-            throw new Exception($"Wrong password for user {user.UserName}");
+            return new LoginUserAccountResponseModel
+            {
+                IsError = true,
+            };
 
         var userRoles = await _userManager.GetRolesAsync(user);
 
         var authClaims = new List<Claim>
         {
-            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-            new Claim(ClaimTypes.Name, user.UserName!),
-            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+            new(ClaimTypes.NameIdentifier, user.Id.ToString()),
+            new(ClaimTypes.Name, user.UserName!),
+            new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
         };
 
         foreach (var userRole in userRoles)
         {
-            authClaims.Add(new Claim(ClaimTypes.Role, userRole));
+            authClaims.Add(new(ClaimTypes.Role, userRole));
         }
 
         var token = GetToken(authClaims);
-        return new JwtSecurityTokenHandler().WriteToken(token);
+        return new LoginUserAccountResponseModel
+        {
+            IsError = false,
+            Token = new JwtSecurityTokenHandler().WriteToken(token)
+        }; 
     }
 
     /// <summary>

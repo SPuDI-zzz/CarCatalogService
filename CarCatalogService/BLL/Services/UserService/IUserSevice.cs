@@ -33,8 +33,9 @@ public interface IUserSevice
     /// <param name="model">An <see cref="AddUserModel"/> containing the details of the new user to be added.</param>
     /// <returns>
     ///     A <see cref="Task"/> representing the asynchronous operation.
+    ///     The result is an <see cref="AddUserAccountResponseModel"/> indicating the status of the user account addition.
     /// </returns>
-    Task AddUserAsync(AddUserModel model);
+    Task<AddUserAccountResponseModel> AddUserAsync(AddUserModel model);
 
     /// <summary>
     ///     Asynchronously updates the details of an existing user based on the provided information.
@@ -43,8 +44,9 @@ public interface IUserSevice
     /// <param name="model">An <see cref="UpdateUserModel"/> containing the updated details for the user.</param>
     /// <returns>
     ///     A <see cref="Task"/> representing the asynchronous operation.
+    ///     The result is an <see cref="UpdateUserAccountResponseModel"/> indicating the status of the user account update.
     /// </returns>
-    Task UpdateUserAsync(long userId, UpdateUserModel model);
+    Task<UpdateUserAccountResponseModel> UpdateUserAsync(long userId, UpdateUserModel model);
 
     /// <summary>
     ///     Asynchronously deletes a user from the system based on their unique identifier.
@@ -52,6 +54,7 @@ public interface IUserSevice
     /// <param name="userId">The unique identifier of the user to be deleted.</param>
     /// <returns>
     ///     A <see cref="Task"/> representing the asynchronous operation.
+    ///     The result is a <see cref="bool"/> indicating whether the deletion was successful (true) or not (false).
     /// </returns>
-    Task DeleteUserAsync(long userId);
+    Task<bool> DeleteUserAsync(long userId);
 }

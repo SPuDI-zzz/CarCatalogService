@@ -14,17 +14,18 @@ public interface IAccountService
     ///     A <see cref="RegisterUserAccountModel"/> containing the user's registration details.
     /// </param>
     /// <returns>
-    ///     A <see cref="Task"/> representing the asynchronous operation.
+    ///     A <see cref="Task"/> representing the asynchronous operation. A response model indicating the success or failure of the registration operation.
     /// </returns>
-    Task RegisterAsync(RegisterUserAccountModel model);
+    Task<RegisterUserAccountResponseModel> RegisterAsync(RegisterUserAccountModel model);
 
     /// <summary>
-    ///     Asynchronously performs user authentication based on the provided login information.
+    ///     Asynchronously authenticates a user based on the provided login credentials and generates a JWT token upon successful authentication.
     /// </summary>
     /// <param name="model">A <see cref="LoginUserAccountModel"/> containing the user's login details.</param>
     /// <returns>
     ///     A <see cref="Task"/> representing the asynchronous operation.
-    ///     The task result is a string containing an authentication token if login is successful.
+    ///     The result is a <see cref="LoginUserAccountResponseModel"/> 
+    ///     containing information about the authentication status and the JWT token if authentication is successful.
     /// </returns>
-    Task<string> LoginAsync(LoginUserAccountModel model);
+    Task<LoginUserAccountResponseModel> LoginAsync(LoginUserAccountModel model);
 }
