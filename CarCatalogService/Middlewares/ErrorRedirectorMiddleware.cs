@@ -34,6 +34,12 @@ public class ErrorRedirectorMiddleware
             _logger.LogInformation($"Status Code: {statusCode}", context.Response.StatusCode);
         }
     }
-
+    /// <summary>
+    ///     Determines whether the provided HTTP status code indicates an error.
+    /// </summary>
+    /// <param name="statusCode">The HTTP status code to check.</param>
+    /// <returns>
+    ///   <c>true</c> if the status code is equal to or greater than <see cref="StatusCodes.Status400BadRequest"/>; otherwise, <c>false</c>.
+    /// </returns>
     private bool IsErrorStatusCode(int statusCode) => statusCode >= StatusCodes.Status400BadRequest;
 }
