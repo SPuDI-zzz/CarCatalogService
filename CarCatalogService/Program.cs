@@ -107,6 +107,7 @@ try
 
     var app = builder.Build();
 
+    app.UseMiddleware<RequestLoggerMiddleware>();
     app.UseMiddleware<ErrorRedirectorMiddleware>();
     app.UseMiddleware<ExceptionsMiddleware>();
 

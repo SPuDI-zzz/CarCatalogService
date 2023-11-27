@@ -24,12 +24,23 @@ public class ErrorRedirectorMiddleware
     /// <returns>A <see cref="Task"/> representing the completion of the request processing.</returns>
     public async Task InvokeAsync(HttpContext context)
     {
-        await _next(context);
+        await _next.Invoke(context);
         var statusCode = context.Response.StatusCode;
-        if (IsErrorStatusCode(statusCode))
+
+        if (IsUnauthorizedStatusCode(statusCode))
         {
-            context.Response.Redirect($"/Errors/{statusCode}");
+            context.Response.Redirect("/Account/Login");
+            return;
         }
+
+        if (IsForbiddenStatusCode(statusCode))
+        {
+            context.Response.Redirect($"/Errors/{StatusCodes.Status404NotFound}");
+            return;
+        }
+
+        if (IsErrorStatusCode(statusCode))       
+            context.Response.Redirect($"/Errors/{statusCode}");
     }
 
     /// <summary>
@@ -40,4 +51,18 @@ public class ErrorRedirectorMiddleware
     ///   <c>true</c> if the status code is equal to or greater than <see cref="StatusCodes.Status400BadRequest"/>; otherwise, <c>false</c>.
     /// </returns>
     private bool IsErrorStatusCode(int statusCode) => statusCode >= StatusCodes.Status400BadRequest;
+
+    /// <summary>
+    ///     Determines whether the provided HTTP status code indicates an unauthorized access.
+    /// </summary>
+    /// <param name="statusCode"></param>
+    /// <returns><c>true</c> if the status code is equal to <see cref="StatusCodes.Status401Unauthorized"/>; otherwise, <c>false</c>.</returns>
+    private bool IsUnauthorizedStatusCode(int statusCode) => statusCode == StatusCodes.Status401Unauthorized;
+
+    /// <summary>
+    ///     Determines whether the provided HTTP status code indicates an forbidden access.
+    /// </summary>
+    /// <param name="statusCode"></param>
+    /// <returns><c>true</c> if the status code is equal to <see cref="StatusCodes.Status403Forbidden"/>; otherwise, <c>false</c>.</returns>
+    private bool IsForbiddenStatusCode(int statusCode) => statusCode == StatusCodes.Status403Forbidden;
 }
