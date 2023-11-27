@@ -8,6 +8,7 @@
     </div>
 }
 <form method="post" asp-action="Edit">
+    <input type="hidden" asp-for="UserId" />
     <div class="mb-3">
         <label asp-for="Mark">Mark</label>
         <input asp-for="Mark" class="form-control" placeholder="Mark">

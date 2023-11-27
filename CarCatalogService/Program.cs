@@ -17,6 +17,7 @@ using System.Text;
 using NLog;
 using NLog.Web;
 using CarCatalogService.Filters;
+using System.Reflection.Metadata;
 
 var logger = LogManager
     .Setup()

@@ -55,7 +55,12 @@ public class CarsController : Controller
     [HttpGet]
     public IActionResult Create()
     {
-        return View();
+        var carViewModel = new AddCarViewModel 
+        {
+            UserId = User.GetUserId() 
+        };
+
+        return View(carViewModel);
     }
 
     /// <summary>
@@ -129,7 +134,6 @@ public class CarsController : Controller
         if (!ModelState.IsValid)
             return BadRequest();
 
-        carViewModel.UserId = User.GetUserId();
         var carModel = _mapper.Map<UpdateCarModel>(carViewModel);
 
         var isEdited = await _carService.UpdateCarAsync(id, carModel);

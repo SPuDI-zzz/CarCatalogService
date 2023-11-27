@@ -12,23 +12,20 @@ public class AddCarViewModel
     /// <summary>
     ///     Gets or sets the mark of the car.
     /// </summary>
-    /// <remarks>This property is required.</remarks>
     [Required(ErrorMessage = "Mark is required")]
-    public required string Mark { get; set; }
+    public string Mark { get; set; } = default!;
 
     /// <summary>
     ///     Gets or sets the model of the car.
     /// </summary>
-    /// <remarks>This property is required.</remarks>
     [Required(ErrorMessage = "Model is required")]
-    public required string Model { get; set; }
+    public string Model { get; set; } = default!;
 
     /// <summary>
     ///     Gets or sets the color of the car.
     /// </summary>
-    /// <remarks>This property is required.</remarks>
     [Required(ErrorMessage = "Color is required")]
-    public required string Color { get; set; }
+    public string Color { get; set; } = default!;
 
     /// <summary>
     ///     Gets or sets the identifier of the user associated with the car.
