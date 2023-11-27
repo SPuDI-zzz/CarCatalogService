@@ -16,6 +16,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using NLog;
 using NLog.Web;
+using CarCatalogService.Filters;
 
 var logger = LogManager
     .Setup()
@@ -33,7 +34,9 @@ try
     builder.Logging.ClearProviders();
     builder.Host.UseNLog();
 
-    services.AddControllersWithViews();
+    services.AddControllersWithViews(options => {
+        options.Filters.Add<RequestLogResourceFilter>();
+    });
 
     services.AddAuthentication(options =>
     {
@@ -107,7 +110,6 @@ try
 
     var app = builder.Build();
 
-    app.UseMiddleware<RequestLoggerMiddleware>();
     app.UseMiddleware<ErrorRedirectorMiddleware>();
     app.UseMiddleware<ExceptionsMiddleware>();
 
