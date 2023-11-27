@@ -6,17 +6,15 @@
 public class ErrorRedirectorMiddleware
 {
     private readonly RequestDelegate _next;
-    private readonly ILogger<ErrorRedirectorMiddleware> _logger;
 
     /// <summary>
     ///     Initializes a new instance of the <see cref="ErrorRedirectorMiddleware"/> class.
     /// </summary>
     /// <param name="next">The next middleware in the pipeline.</param>
     /// <param name="logger">The logger for capturing error redirection events.</param>
-    public ErrorRedirectorMiddleware(RequestDelegate next, ILogger<ErrorRedirectorMiddleware> logger)
+    public ErrorRedirectorMiddleware(RequestDelegate next)
     {
         _next = next;
-        _logger = logger;
     }
 
     /// <summary>
@@ -31,9 +29,9 @@ public class ErrorRedirectorMiddleware
         if (IsErrorStatusCode(statusCode))
         {
             context.Response.Redirect($"/Errors/{statusCode}");
-            _logger.LogInformation($"Status Code: {statusCode}", context.Response.StatusCode);
         }
     }
+
     /// <summary>
     ///     Determines whether the provided HTTP status code indicates an error.
     /// </summary>

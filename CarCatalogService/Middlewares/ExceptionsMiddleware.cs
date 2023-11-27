@@ -30,13 +30,9 @@ public class ExceptionsMiddleware
     {
         try
         {
-            var originalResponseBody = context.Response.Body;
-            using var responseBody = new MemoryStream();
-            context.Response.Body = responseBody;
+            await LogRequest(context);
 
             await _next.Invoke(context);
-
-            await LogResponse(context, responseBody, originalResponseBody);
         }
         catch (Exception ex)
         {
@@ -47,33 +43,31 @@ public class ExceptionsMiddleware
     }
 
     /// <summary>
-    ///     Logs information about the HTTP response, including status code, headers, and response body.
+    ///     Logs information about the HTTP request, including method, path, headers, and request body.
     /// </summary>
     /// <param name="context">The HttpContext representing the current request and response.</param>
-    /// <param name="responseBody">The MemoryStream containing the captured response content.</param>
-    /// <param name="originalResponseBody">The original response body.</param>
     /// <returns>A <see cref="Task"/> representing the completion of the log operation.</returns>
-    private async Task LogResponse(HttpContext context, MemoryStream responseBody, Stream originalResponseBody)
+    private async Task LogRequest(HttpContext context)
     {
-        var responseContent = new StringBuilder();
-        responseContent.AppendLine("=== Response Info ===");
+        var requestContent = new StringBuilder();
 
-        responseContent.AppendLine($"Status Code = {context.Response.StatusCode}");
+        requestContent.AppendLine("=== Request Info ===");
+        requestContent.AppendLine($"method = {context.Request.Method.ToUpper()}");
+        requestContent.AppendLine($"path = {context.Request.Path}");
 
-        responseContent.AppendLine("-- headers");
-        foreach (var (headerKey, headerValue) in context.Response.Headers)
+        requestContent.AppendLine("-- headers");
+        foreach (var (headerKey, headerValue) in context.Request.Headers)
         {
-            responseContent.AppendLine($"header = {headerKey}    value = {headerValue}");
+            requestContent.AppendLine($"header = {headerKey}    value = {headerValue}");
         }
-        
-        responseContent.AppendLine("-- body");
-        responseBody.Position = 0;
-        var content = await new StreamReader(responseBody).ReadToEndAsync();
-        responseContent.AppendLine($"body = {content}");
-        responseBody.Position = 0;
-        await responseBody.CopyToAsync(originalResponseBody);
-        context.Response.Body = originalResponseBody;
 
-        _logger.LogInformation(responseContent.ToString());
+        requestContent.AppendLine("-- body");
+        context.Request.EnableBuffering();
+        var requestReader = new StreamReader(context.Request.Body);
+        var content = await requestReader.ReadToEndAsync();
+        requestContent.AppendLine($"body = {content}");
+
+        _logger.LogInformation(requestContent.ToString());
+        context.Request.Body.Position = 0;
     }
 }
