@@ -41,7 +41,8 @@ public class RequestLogResourceFilter : IAsyncActionFilter
 
         var model = context.ActionArguments
             .FirstOrDefault(keyValuePair => keyValuePair.Value?.GetType()
-                .IsSubclassOf(typeof(BaseViewModel)) ?? false).Value;
+                .IsSubclassOf(typeof(BaseViewModel)) ?? false)
+            .Value;
 
         var requestInfo = new RequestInfo
         {
