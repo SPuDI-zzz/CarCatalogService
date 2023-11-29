@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using CarCatalogService.BLL.Services.CarService.Models;
+using CarCatalogService.ViewModels.Common;
 using System.ComponentModel.DataAnnotations;
 
 namespace CarCatalogService.ViewModels;
@@ -7,7 +8,7 @@ namespace CarCatalogService.ViewModels;
 /// <summary>
 ///     Represents a view model for creating a new car entity.
 /// </summary>
-public class AddCarViewModel
+public class AddCarViewModel : BaseViewModel
 {
     /// <summary>
     ///     Gets or sets the mark of the car.

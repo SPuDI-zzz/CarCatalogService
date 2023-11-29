@@ -5,12 +5,14 @@ using CarCatalogService.BLL.Services.AccountService.Models;
 using CarCatalogService.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using CarCatalogService.Attributes;
 
 namespace CarCatalogService.Controllers;
 
 /// <summary>
 ///     Controller responsible for handling user authentication and account-related actions.
 /// </summary>
+[IgnoreLogging]
 public class AccountController : Controller
 {
     private readonly IAccountService _accountService;

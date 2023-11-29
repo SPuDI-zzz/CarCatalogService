@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using CarCatalogService.BLL.Services.AccountService.Models;
+using CarCatalogService.ViewModels.Common;
 using System.ComponentModel.DataAnnotations;
 
 namespace CarCatalogService.ViewModels;
@@ -7,7 +8,7 @@ namespace CarCatalogService.ViewModels;
 /// <summary>
 ///     Represents a view model for user registration.
 /// </summary>
-public class RegisterViewModel
+public class RegisterViewModel : BaseViewModel
 {
     /// <summary>
     ///     Gets or sets the login (username) of the user.

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using CarCatalogService.BLL.Services.UserService.Models;
 using CarCatalogService.Shared.Enum;
+using CarCatalogService.ViewModels.Common;
 using System.ComponentModel.DataAnnotations;
 
 namespace CarCatalogService.ViewModels;
@@ -8,7 +9,7 @@ namespace CarCatalogService.ViewModels;
 /// <summary>
 ///     Represents a view model for creating a new user entity.
 /// </summary>
-public class AddUserViewModel
+public class AddUserViewModel : BaseViewModel
 {
     /// <summary>
     ///     Gets or sets the login of the user.

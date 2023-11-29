@@ -1,13 +1,14 @@
 ﻿using AutoMapper;
 using CarCatalogService.BLL.Services.UserService.Models;
 using CarCatalogService.Shared.Enum;
+using CarCatalogService.ViewModels.Common;
 
 namespace CarCatalogService.ViewModels;
 
 /// <summary>
 ///     Represents a view model for editing an existing user entity.
 /// </summary>
-public class EditUserViewModel
+public class EditUserViewModel : BaseViewModel
 {
     /// <summary>
     ///     Gets or sets the identifier of the user entity to edit.

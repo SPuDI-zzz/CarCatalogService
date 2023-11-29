@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using CarCatalogService.BLL.Services.CarService.Models;
+using CarCatalogService.ViewModels.Common;
 using System.ComponentModel.DataAnnotations;
 
 namespace CarCatalogService.ViewModels;
@@ -7,7 +8,7 @@ namespace CarCatalogService.ViewModels;
 /// <summary>
 ///     Represents a view model for editing an existing car entity.
 /// </summary>
-public class EditCarViewModel
+public class EditCarViewModel : BaseViewModel
 {
     /// <summary>
     ///     Gets or sets the identifier of the car entity to edit.
