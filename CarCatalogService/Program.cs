@@ -6,6 +6,7 @@ using CarCatalogService.DAL.EntityFramework;
 using CarCatalogService.DAL.EntityFramework.Setup;
 using CarCatalogService.DAL.Repositories.CarRepository;
 using CarCatalogService.DAL.Repositories.Interfaces;
+using CarCatalogService.Filters;
 using CarCatalogService.Middlewares;
 using CarCatalogService.Shared.Const;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -13,11 +14,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using System.Text;
 using NLog;
 using NLog.Web;
-using CarCatalogService.Filters;
-using System.Reflection.Metadata;
+using System.Text;
 
 var logger = LogManager
     .Setup()
@@ -44,7 +43,6 @@ try
         options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
         options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
     })
-    .AddCookie(opt => opt.Cookie.Name = "token")
     .AddJwtBearer("jwt", options =>
     {
         options.RequireHttpsMetadata = false;
