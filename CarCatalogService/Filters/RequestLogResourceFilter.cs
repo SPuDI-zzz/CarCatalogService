@@ -1,6 +1,7 @@
 ﻿using CarCatalogService.Attributes;
 using CarCatalogService.ViewModels.Common;
 using Microsoft.AspNetCore.Mvc.Filters;
+using System.Reflection.PortableExecutable;
 using System.Text.Json;
 
 namespace CarCatalogService.Filters;
@@ -39,48 +40,19 @@ public class RequestLogResourceFilter : IAsyncActionFilter
             return;
         }
 
-        var model = context.ActionArguments
+        var method = context.HttpContext.Request.Method.ToUpper();
+
+        var path = context.HttpContext.Request.Path;
+
+        var headers = context.HttpContext.Request.Headers.ToDictionary(header => header.Key, header => header.Value.ToString());
+
+        var body = context.ActionArguments
             .FirstOrDefault(keyValuePair => keyValuePair.Value?.GetType()
                 .IsSubclassOf(typeof(BaseViewModel)) ?? false)
-            .Value;
+            .Value ?? string.Empty;
 
-        var requestInfo = new RequestInfo
-        {
-            Method = context.HttpContext.Request.Method.ToUpper(),
-            Path = context.HttpContext.Request.Path,
-            Headers = context.HttpContext.Request.Headers.ToDictionary(header => header.Key, header => header.Value.ToString()),
-            Body = model ?? ""
-        };
-
-        var requestJson = JsonSerializer.Serialize(requestInfo);
-        _logger.LogInformation($"{requestJson}");
+        _logger.LogInformation("{@Method}, {@Path}, {@Headers}, @{Body}", method, path, headers, body);
 
         await next();
-    }
-
-    /// <summary>
-    ///     Represents information about an HTTP request for logging purposes.
-    /// </summary>
-    private class RequestInfo
-    {
-        /// <summary>
-        ///     Gets or sets the HTTP method used in the request.
-        /// </summary>
-        public string? Method { get; set; }
-
-        /// <summary>
-        ///     Gets or sets the path of the request.
-        /// </summary>
-        public PathString Path { get; set; }
-
-        /// <summary>
-        ///     Gets or sets the headers of the request.
-        /// </summary>
-        public Dictionary<string, string>? Headers { get; set; }
-
-        /// <summary>
-        ///     Gets or sets the body content of the request.
-        /// </summary>
-        public object? Body { get; set; }
     }
 }
